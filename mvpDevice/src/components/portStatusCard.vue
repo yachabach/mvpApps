@@ -1,9 +1,12 @@
 <template>
   <section class="card-foundation">
-    <span>
-        <button class="button-list" @click="handleConnectPort">Connect Port</button>
-        {{ portOpenStatus }}
-    </span>
+    <div>
+      <span>
+          <button class="button-list" @click="handleConnectPort">Connect Port</button>
+          {{ portOpenStatus }}
+      </span>      
+    </div>
+
   </section>
 </template>
 

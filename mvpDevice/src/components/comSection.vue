@@ -4,15 +4,9 @@
         <section class="card-foundation">
             <div class="card-section">
                 <p>Com Port Open: {{ comPortStatus }}</p>
-                <button class="button-list" @click="handleConnectPort">Connect Port</button>
-                <button class="button-list" @click="handleClosePort">Close Port</button>                    
-                <button class="button-list" @click="handleForgetPorts">Forget Port</button>                    
-                <button class="button-list" @click="handleSeeSignals">See Signals</button>                    
-                <button class="button-list" @click="handleSeePortStatus">See Port Status</button>                    
-                <button class="button-list" @click="handleRead">Read Data</button>                    
-                <button class="button-list" @click="handleWrite">Write Hello World</button>                    
-                <button class="button-list" @click="handleCodeTest">Test Code</button>                    
-
+                <span><button class="button-list" @click="handleConnectPort">Connect Port</button> {{ portOpenStatus }}</span>
+                <button class="button-list" @click="handleListen">Listen to Port</button>                    
+                <button class="button-list" @click="handleHelloWorld">Write Hello World</button>                    
             </div>
             <div class="card-section" >
                 <h2>Com Configuration</h2>
@@ -21,53 +15,61 @@
                     <li>Port Open: {{ comPortStatus }}</li>
                 </ul>
             </div>
+            <div>
+                <h3>
+                    Sent Messages 
+                    <button @click="clearSent">Clear Sent Messages</button>
+                </h3>
+                <p v-for="msg in sentMessages" :key="msg">{{ msg }}</p>
+            </div> 
+            <div>
+                <h3>
+                    Read Messages 
+                    <button @click="clearRead">Clear Read Messages</button>
+                </h3>
+                <p v-for="msg in readMessages" :key="msg">{{ msg }}</p>
+            </div>        
         </section>
     </section>
 </template>
 
 <script setup>
-import { computed } from "vue"
+import { computed, ref } from "vue"
 import { ComService } from '../common/comService.js'
 
 const comService = ComService();
+
+const freeMessage = ref('')
+const sentMessages = ref([])
+const readMessages = ref([])
+
+const addToSentMessages = (msg = 'No Message') => {
+    sentMessages.value.push(msg)
+}
+
+const addToReadMessages = (msg = 'No Message') => {
+    readMessages.value.push(msg)
+}
 
 const handleConnectPort = async () => {
     console.log('Authorize a new or different port')
     comService.adjustConnectedPort()
 }
 
-const handleForgetPorts = () => {
-    comService.forgetPorts()
+const handleListen = async () => {
+    comService.listenToActivePort(addToReadMessages)
 }
 
-const handleSeeSignals = async () => {
-    console.log('Port Signals: ', await comService.activePortSignals())
+const handleHelloWorld = () => {
+    comService.writeToPort('Hello World', addToSentMessages)
 }
 
-const handleSeePortStatus = async () => {
-    console.log('Port Signals: ', await comService.portStatus())
+const clearSent = () => {
+    sentMessages.value = []
 }
 
-const handleWrite = async () => {
-    const msg = "Hello World"
-    await comService.writeToPort(msg)
-}
-
-const handleRead = async () => {
-    console.log('Port status: ', await comService.portStatus())
-    const { value, done } = await comService.readFromPort()
-    console.log('Read values in handle read: ', {value, done})
-}
-
-const handleCodeTest = async () => {
-    console.log('Starting mdn test code')
-    await comService.listenToActivePort()
-    console.log('completed mdn test code')
-}
-
-const handleClosePort = async () => {
-    console.log('Close a port')
-    comService.closePort()
+const clearRead = () => {
+    readMessages.value = []
 }
 
 const comPortStatus = computed(() => 'Building COM Status')

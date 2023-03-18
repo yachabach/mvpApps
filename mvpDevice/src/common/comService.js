@@ -48,7 +48,7 @@ export const ComService = () => {
             }
             if (value) {
               console.log(value);
-              callback()
+              callback(value)
             }
           }
         } catch (error) {
