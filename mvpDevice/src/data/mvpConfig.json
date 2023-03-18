@@ -1,0 +1,8 @@
+{
+    "comProtocol": {
+        "baudRate": 12500,
+        "dataBits": 8,
+        "stopBits": 1,
+        "parity": "none"
+    }
+}

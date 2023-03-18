@@ -1,0 +1,31 @@
+{
+    "programName": "First Program",
+    "contact": {
+        "name": "David Yachabach",
+        "phone": "352-262-9164"
+    },
+    "outletPort": "Both",
+    "programLength": 30,
+    "stimulation": {
+        "waveform": "Monophasic",
+        "amplitudeRange": {
+            "lo": 0,
+            "hi": 10
+        },
+        "pulseWidth": 200,
+        "frequency": 50
+    },
+    "impedance": "check",
+    "calibration": {
+        "frequency": "once",
+        "startingAmplitude": 2,
+        "amplitudeIncrements": 0.5,
+        "calibration": {
+            "to": "perception",
+            "then": {
+                "percent": 2,
+                "trend": "increase"
+            }
+        }
+    }
+}

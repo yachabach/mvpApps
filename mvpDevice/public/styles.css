@@ -1,0 +1,204 @@
+
+/************Global Styles v1.4**********************************/
+
+/*Root refers to the root element of the document.  In this case, the html 
+tag.  This means that these variable apply to the entire document*/
+:root{   
+  
+    /* Color Palette */
+    --primary: #6271dc;
+    --secondary: #DCCD62;
+    --neutral: #f4f4f4;
+    --surface0: #f4f4f4e4;
+    --surface1: #f4f4f4d4;
+    --cardHeader: #D7E2FF;
+    --outline: #C7C7C8;
+    --inputBackground: #FCFCFC;
+    --inputTextColor: #9A9A9A;
+    --hyperlink: #0000EE;
+    --titleColor: #9A9A9A;
+
+    --alertCritical: #E26666;
+    --alertSensitive: #D2E314;
+    --alertInfo: #CDD2F3;
+  
+    /* Typography - font-sizes and weights */
+    /*Display*/
+    --displayFont: 2em; /*Titles - h1 element*/
+    --displayFontWeight: 900;    
+
+    /*Headline*/
+    --headlineFont: 1.5em;    /*Heading - h2 element*/
+
+    /*Title*/
+    --titleFont: 1em; /*Subheading - h3 element*/
+    --titleWeight: 700;
+    --titleFontSmall: 0.6875; /*small titles*/
+
+    /*Body*/
+    --bodyFont: 0.75em;
+    --bodyWeight: 400;
+
+    /*Lists*/
+    --listFont: .875em;  /*lists, text, placeholders p, li elements*/
+    --listWeight: 400;
+
+    -webkit-touch-callout: none; /* Safari */
+    -webkit-user-select: none; /* Chrome */     
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none;
+  }
+  
+  /*This comes from:   
+  https://www.dwuser.com/education/content/an-introduction-to-the-html5-structural-elements/
+  
+  It is here for compatability with older browsers that don't recognize these tags as 
+  block-level elements.  See similar accomodations in the index.html file.
+  */
+  /* header, footer, section, article, nav, aside {
+      display: block;
+   } */
+  
+  /*Reset any default margins and sizing*/
+  html, body {
+      margin: 0;
+      padding: 0;
+      /* box-sizing: border-box; */
+      width: 100vw;
+      height: 100vh;
+    }
+
+    /* Set a standard font */
+    html, body, textarea, h1, h2, h3 {
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+    }
+  
+    /*We set the body position to relative and to the upper left corner of the
+    html document.  This is its locatio by default but any absoulte positioning
+    without this will reference the html document and not the body - which might
+    be different*/
+    body {
+      position: relative;  /*Set refence point for absolute positioning*/
+      top: 0px;
+      left: 0px;
+      right: 0px;
+  }
+  
+  /*These heading styles are set for mobile-first.  Our media queries will
+  use min-width to change font and image sizes for screens larger than 480px. */
+  h1 {
+    font-size: var(--displayFont);
+    font-weight: 700;
+    margin: 0;
+  }
+  
+  h2 {
+    font-size: var(--headlineFont);  /*also element data*/
+    font-weight:600;
+    margin: 0;
+  }
+  
+  h3 {
+    font-size: var(--titleFont);   /*also element title*/
+    font-weight: var(--titleWeight);
+    margin: 0;
+  }
+
+  h4 {
+    font-size: var(--titleFontSmall);   /*also element title*/
+    font-weight: var(--titleWeight);
+    color: var(--titleColor);
+    margin: 0;
+  }
+
+  h5 {
+    font-size: var(--bodyFont);   /*also element title*/
+    font-weight: var(--bodyWeight);
+    color: var(--titleColor);
+    text-align: left;
+    margin: 0;
+  }
+
+  a {
+    text-decoration: none;
+    color: black;
+  }
+  
+  p, li {
+    font-size: var(--listFont);
+    font-weight: var(--listWeight);
+    margin: 0px;
+  }
+
+  ul {
+    list-style-type: none;
+  }
+
+  .CANCELButton {
+    color: var(--titleColor);
+  }
+
+  .OKButton {
+    color: var(--hyperlink);
+  }
+
+    /*Background colors for data element status */
+    .none {
+      background-color: white;
+    }
+    .info {
+      background-color: var(--alertInfo);
+    }
+    .critical {
+      background-color: var(--alertCritical);
+    }
+    .sensitive {
+      background-color: var(--alertSensitive)
+    }
+
+  .card {
+    width: 90%;
+    max-width: 400px;
+    margin: 16px auto;
+    padding: 8px;
+  }
+
+  .card ul { 
+    margin: 0;
+    padding: 0;
+  }
+    
+  .material-symbols-outlined {
+    cursor: pointer;
+  }
+
+  .card-foundation {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content:space-evenly;
+    margin: 16px;
+    padding: 16px;
+    background-color: var(--surface0);
+    border-radius: 10px;
+  }
+
+  .card-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    background-color: var(--surface1);
+    border-radius: 10px;
+    margin: 4px;
+    padding: 8px;
+  }
+
+  .app-window {
+    width: 90%;
+    max-width: 800px;
+    background-color: var(--neutral);
+    text-align: left;
+    margin: 16px auto;
+    padding: 16px;
+  }
