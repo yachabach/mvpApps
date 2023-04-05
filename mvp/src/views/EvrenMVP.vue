@@ -1,6 +1,6 @@
 <template>
   <section>
-    <h1>Evren MVP Device Loader - Active: unknown</h1>
+    <h1>Evren MVP Device Loader - {{portOpenStatus}}</h1>
       <FileSelector />
       <p></p>
       <ComSection />
@@ -14,8 +14,10 @@ import FileSelector from '@/components/fileSelector.vue'
 import ComSection from '@/components/comSection.vue'
 import MessageSection from '@/components/messageSection.vue'
 import { usePortStore } from '../common/portStore.js';
+import { storeToRefs } from 'pinia';
 
 const { initializePort } = usePortStore()
+const { portOpenStatus } = storeToRefs(usePortStore())
 
 console.log('Starting EvrenMVP')
 initializePort()

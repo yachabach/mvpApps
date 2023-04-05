@@ -1,19 +1,25 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
-
+import { useLogStore } from './logStore'
 import config from '@/data/mvpConfig.json'
 
 export const  usePortStore = defineStore('port', () => {
+  
+  const { logEvent } = useLogStore()
+
+  logEvent('Started portStore')
 
   //state
-  const activePort = ref()
-  const activeReader = ref()
-  const activeWriter = ref()
+  const activePort = ref(undefined)
+  const activeReader = ref(undefined)
+  let quitListen = false
 
   //getters
   const browserCapable = computed(() => { return "serial" in navigator})
-  const portOpenStatus = computed(() => 
-    activeReader.value ? 'Port is open' : 'Port is closed or not selected')
+  const portAuthorized = computed(() => {
+    console.log('Checking status of COM port')
+    return activePort.value
+  })
 
   //actions
   async function changeActivePort() {
@@ -26,23 +32,28 @@ export const  usePortStore = defineStore('port', () => {
     }
   }
 
+  /**
+   * We allow only one port to be authorized.  We also force
+   * the user to authorize a port if one isn't already authorized
+   * since we cannot do it programatically.
+   */
   async function initializePort() {
     await trimPorts()
     activePort.value = [...await navigator.serial.getPorts()][0]
     if (!activePort.value) {
       alert('No COM port connected.  \nClick "Connect Port" to connect a COM Port.')
     } else {
-      await openActivePort()
-      // activeReader.value = await openReader();
-      // activeWriter.value = await openWriter();
+      logEvent('Opening Port')
+      await openActivePort();
+      listenToActivePort(msg => logEvent('Received: ' + msg));
     }
   }
 
 
-  /**Port authorization management
+  /**Serial Port authorization
    * 
-   * Used to ensure ports are properly opened and closed.  Limit
-   * app to a single authorized port.
+   * In javascript, the user must actively request and authorize
+   * any local serial port that is to be used.
    */
   async function authorizePort() {
     let res = undefined
@@ -58,11 +69,8 @@ export const  usePortStore = defineStore('port', () => {
   const forgetPort = async port => {
     if (port) {
       try {  
-        await closeReader();
-        await closeWriter();
-        if (await port.readable) (await port.close());
         await port.forget();
-        port = null
+        port = undefined
       } catch (err) {
         console.log('Error in portStore forgetting active port: ', err)
       }
@@ -77,67 +85,22 @@ export const  usePortStore = defineStore('port', () => {
       await forgetPort(allPorts[i])
     }
   }
-
-  //Utilities
-  const isReaderLocked = async () => { 
-    if (activePort.value) {
-      if (await activePort.value.readable) {
-        const status = await activePort.value.readable.locked
-        console.log('returning reader status: ', status)
-        return status
-      } 
-    } 
-    return false
-  }
   
-  const isWriterLocked = async () => { 
-    if (activePort.value) {
-      if (await activePort.value.writable) {
-        const status = await activePort.value.writable.locked
-        return status
-      } 
-    } 
-    return false
-  }
-
   const openActivePort = async () => {
-    if (activePort.value) {
-      try {
-        await activePort.value.open(config.comProtocol)
-        console.log('just opened port: ', activePort.value)
-      }catch (err) {
-        console.log('Error in portStore opening active port: ', err)
-      }
+    try {
+      await activePort.value.open(config.comProtocol)
+      console.log('just opened port: ', activePort.value)
+      console.log('readable property is: ', activePort.value.readable)
+    }catch (err) {
+      console.log('Error in portStore opening active port: ', err)
     }
   }
 
-  async function openReader () {
-    if (! await isReaderLocked()) {
-      const reader = await activePort.value.readable.getReader()
-      return reader
-    }
-  }
-
-  async function closeReader() {
-    if (await isReaderLocked()) {
-      await activeReader.value.releaseLock();
-      activeReader.value = null
-    }
-  }
-
-  async function openWriter() {
-    if (! await isWriterLocked()) {
-      const writer = await activePort.value.writable.getWriter()
-      console.log('got writer: ', writer)
-      return writer
-    }
-  }
-
-  async function closeWriter() {
-    if (await isWriterLocked()) {
-      await activeWriter.value.releaseLock();
-      activeWriter.value = null
-    }
+  const disconnectPort = async () => {
+    quitListen = true
+    await forgetPort(activePort.value)
+    quitListen = false
+    await initializePort()
   }
 
   const portStatus = async () => {
@@ -157,17 +120,65 @@ export const  usePortStore = defineStore('port', () => {
     return await activePort.value.getSignals()
   }
 
+    // from: https://developer.chrome.com/en/articles/serial/
+    const listenToActivePort = async (callback = () => {}) => {
+      logEvent('Started Listening to port...')
+      while (activePort.value.readable && !quitListen) {
+        const reader = activePort.value.readable.getReader() // activeReader.value = await openReader();
+        try {
+          while (true) {
+            const { value, done } = await reader.read() // activeReader.value.read();
+            if (done) {
+              // Allow the serial port to be closed later.
+              reader.releaseLock() // activeReader.value.releaseLock()
+              break;
+            }
+            if (value) {
+              console.log('Received msg from listen: ', value)
+              callback(value)
+            }
+          }
+        } catch (error) {
+          console.log('Non-fatal error in listen to port: ', error)
+          quitListen = true
+        } finally {
+          // await closeReader();
+        }
+      }
+      logEvent('Stopped listening to port...')  
+      quitListen = false
+    }
+
+    const utfEncoder = new TextEncoder();
+    // const utfDecoder = new TextDecoder();
+
+    const writeToPort = async (msg, callback = () => {}) => {
+      let writer
+      try {
+        writer = activePort.value.writable.getWriter()
+        const fixType = (typeof(msg) === 'string') ? utfEncoder.encode(msg) : msg
+        const utfMsg = new Uint8Array(fixType);
+        console.log('msg type: ', typeof(msg))
+        await writer.write(utfMsg);
+        callback(msg)            
+      } catch (err) {
+        console.log('Error writing to device: ', err)
+      } finally {
+        logEvent(`Wrote to COM Port: ${msg}`)
+        writer.releaseLock()
+      }
+    }
+
   return { 
     activePort, 
     activeReader,
-    activeWriter,
-    openReader, closeReader,
-    openWriter, closeWriter,
     changeActivePort, 
     initializePort, 
     portStatus,
     activePortSignals,
+    disconnectPort,
+    writeToPort,
     browserCapable,
-    portOpenStatus
+    portAuthorized
   }
 })

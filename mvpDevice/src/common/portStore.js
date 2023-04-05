@@ -12,15 +12,16 @@ export const  usePortStore = defineStore('port', () => {
 
   //getters
   const browserCapable = computed(() => { return "serial" in navigator})
-  const portOpenStatus = computed(() => 
-    activeReader.value ? 'Port is open' : 'Port is closed or not selected')
+  const portOpenStatus = computed(() => {
+    console.log('Checking Readable status: ', activePort.value.readable)
+    return activePort.value.readable ? 'Port is open' : 'Port is closed or not selected'
+  })
 
   //actions
   async function changeActivePort() {
     const newPort = await authorizePort()
     if (newPort) {
         console.log('forgetting active port...')
-        // await forgetActivePort()
         await forgetPort(activePort.value)
         await initializePort()
     }
@@ -33,8 +34,6 @@ export const  usePortStore = defineStore('port', () => {
       alert('No COM port connected.  \nClick "Connect Port" to connect a COM Port.')
     } else {
       await openActivePort()
-      // activeReader.value = await openReader();
-      // activeWriter.value = await openWriter();
     }
   }
 

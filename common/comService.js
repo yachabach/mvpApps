@@ -33,36 +33,9 @@ export const ComService = () => {
       }
     } 
 
-    // from: https://developer.chrome.com/en/articles/serial/
-    const listenToActivePort = async (callback = {}) => {
-      while (activePort.value.readable) {
-        activeReader.value = await portStore.openReader();
-
-        try {
-          while (true) {
-            console.log('in the true')
-            const { value, done } = await activeReader.value.read();
-            if (done) {
-              // Allow the serial port to be closed later.
-              break;
-            }
-            if (value) {
-              console.log(value);
-              callback()
-            }
-          }
-        } catch (error) {
-          console.log('Non-fatal error in listen to port: ', error)
-        } finally {
-          await portStore.closeReader();
-        }
-      }  
-    }
-
     return Object.freeze({
         writeToPort,
         readFromPort,
-        listenToActivePort,
         utfDecoder,
         utfEncoder
     })
