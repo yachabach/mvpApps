@@ -4,5 +4,135 @@
         "dataBits": 8,
         "stopBits": 1,
         "parity": "none"
-    }
+    },
+    "defaultProgram": {
+        "programName": "Default Program",
+        "contact": {
+            "name": "Evren Default Program",
+            "phone": ""
+        },
+        "outletPort": "both",
+        "programLength": "00:15:00",
+        "stimulation": {
+            "waveform": "monophasic",
+            "amplitudeRange": {
+                "currentLower": 0,
+                "currentUpper": 10
+            },
+            "pulseWidth": 200,
+            "frequency": 50
+        },
+        "impedance": {
+            "impedanceInitiate": false,
+            "impedanceMonitor": false
+        },
+        "calibration": {
+            "calibrationFrequency": "once",
+            "calibrationStart": 2,
+            "calibrationStep": 0.5,
+            "calibrationLimit": {
+                "calibrateTo": "perception",
+                "then": {
+                    "postCalibrateType": "percent",
+                    "postCalibrateStep": 2,
+                    "postCalibrateTrend": "Increase"
+                }
+            }
+        }
+    },
+    "outletPortSegments": [
+        {
+            "value": "left",
+            "label": "Left",
+            "position": "start"        
+        },
+        {
+            "value": "both",
+            "label": "Both",
+            "position": "mid"        
+        },
+        {
+            "value": "right",
+            "label": "Right",
+            "position": "end"        
+        }
+    ],
+    "waveformSegments": [
+        {
+            "value": "monophasic",
+            "label": "Monophasic",
+            "position": "start"        
+        },
+        {
+            "value": "biphasic",
+            "label": "Biphasic",
+            "position": "end"        
+        }
+    ],   
+    "calibrationFrequencySegments": [
+        {
+            "value": "once",
+            "label": "Once",
+            "position": "start"        
+        },
+        {
+            "value": "every",
+            "label": "Every Use",
+            "position": "end"        
+        }
+    ],   
+    "calibrateToSegments": [
+        {
+            "value": "perception",
+            "label": "Perception",
+            "position": "start"        
+        },
+        {
+            "value": "discomfort",
+            "label": "Discomfort",
+            "position": "end"        
+        }
+    ],      
+    "impedanceSegments": [
+        {
+            "value": "check",
+            "label": "Check To Initiate",
+            "position": "start"        
+        },
+        {
+            "value": "monitor",
+            "label": "Monitor Impedance",
+            "position": "end"        
+        }
+    ],
+    "portAuthButton": {
+        "successPhrase": "Port is authorized",
+        "failPhrase": "Port is not authorized",
+        "remedy": "Click to authorize Serial Com port"        
+    },   
+    "listenButton": {
+        "successPhrase": "Test Connection",
+        "failPhrase": "",
+        "remedy": "Click to test connection"        
+    },    
+    "writeButton": {
+        "successPhrase": "Write to device",
+        "failPhrase": "",
+        "remedy": ""        
+    },    
+    "readButton": {
+        "successPhrase": "Read from device",
+        "failPhrase": "",
+        "remedy": ""        
+    },    
+    "resetButton": {
+        "successPhrase": "Reset device",
+        "failPhrase": "",
+        "remedy": ""        
+    },    
+    "phoneButton": {
+        "successPhrase": "Send Phone",
+        "failPhrase": "",
+        "remedy": ""        
+    }     
 }

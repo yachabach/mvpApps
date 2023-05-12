@@ -6,21 +6,29 @@ tag.  This means that these variable apply to the entire document*/
 :root{   
   
     /* Color Palette */
-    --primary: #6271dc;
-    --secondary: #DCCD62;
-    --neutral: #f4f4f4;
-    --surface0: #f4f4f4e4;
-    --surface1: #f4f4f4d4;
+    --primary: #bdbc30;
+    --primary-light: #f9f9d3;
+    --secondary: #515b2b;
+    --tertiary: #02797d;
+    --neutral: #ecece9;
+    --surface0: #fdfbff;
+    --surface1: #f4f4f4;
+    --surface2: #ffffff;
     --cardHeader: #D7E2FF;
     --outline: #C7C7C8;
+    --enabled-outline: #79747E;
+    --selected-background: #E8DEF8;
+    --colored-button-background: var(--primary-light);
     --inputBackground: #FCFCFC;
     --inputTextColor: #9A9A9A;
     --hyperlink: #0000EE;
     --titleColor: #9A9A9A;
+    --textColor: #44546A;
 
     --alertCritical: #E26666;
     --alertSensitive: #D2E314;
     --alertInfo: #CDD2F3;
+    --alertSuccess: #7ff37f;
   
     /* Typography - font-sizes and weights */
     /*Display*/
@@ -36,12 +44,20 @@ tag.  This means that these variable apply to the entire document*/
     --titleFontSmall: 0.6875; /*small titles*/
 
     /*Body*/
-    --bodyFont: 0.75em;
+    --bodyFont: 1em;
     --bodyWeight: 400;
 
     /*Lists*/
     --listFont: .875em;  /*lists, text, placeholders p, li elements*/
     --listWeight: 400;
+
+    /*Label*/
+    --labelFont: .875em;  /*lists, text, placeholders p, li elements*/
+    --labelWeight: 100;
+
+    /*Input Text*/
+    --inputTextFont: 1.1em;
+    --inputTextWeight: 600;
 
     -webkit-touch-callout: none; /* Safari */
     -webkit-user-select: none; /* Chrome */     
@@ -59,20 +75,31 @@ tag.  This means that these variable apply to the entire document*/
   /* header, footer, section, article, nav, aside {
       display: block;
    } */
+
+   *,
+   *:before,
+   *:after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+   }
   
   /*Reset any default margins and sizing*/
   html, body {
-      margin: 0;
+      margin: 0 auto;
       padding: 0;
       /* box-sizing: border-box; */
       width: 100vw;
       height: 100vh;
+      /* background-color: var(--neutral); */
+      max-width: 1440px;
     }
 
     /* Set a standard font */
     html, body, textarea, h1, h2, h3 {
       font-family: 'Roboto', sans-serif;
       font-size: 16px;
+      color: var(--textColor);
     }
   
     /*We set the body position to relative and to the upper left corner of the
@@ -126,14 +153,28 @@ tag.  This means that these variable apply to the entire document*/
     color: black;
   }
   
-  p, li {
+  li {
     font-size: var(--listFont);
     font-weight: var(--listWeight);
     margin: 0px;
   }
+  
+  p {
+    font-size: var(--bodyFont);
+    font-weight: var(--bodyWeight);
+    margin: 0px;
+    padding: 0px;
+  }
 
   ul {
     list-style-type: none;
+  }
+
+  label {
+    font-size: var(--labelFont);
+    font-weight: var(--labelWeight);
+    margin: 0px;
+    padding: 0px;
   }
 
   .CANCELButton {
@@ -177,28 +218,38 @@ tag.  This means that these variable apply to the entire document*/
   .card-foundation {
     display: flex;
     flex-wrap: wrap;
-    justify-content:space-evenly;
-    margin: 16px;
-    padding: 16px;
-    background-color: var(--surface0);
-    border-radius: 10px;
+    justify-content:flex-start;
   }
 
   .card-section {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    background-color: var(--surface1);
+    background-color: var(--surface0);
     border-radius: 10px;
     margin: 4px;
     padding: 8px;
   }
 
-  .app-window {
-    width: 90%;
-    max-width: 800px;
-    background-color: var(--neutral);
-    text-align: left;
-    margin: 16px auto;
-    padding: 16px;
-  }
+.material-icons.success {
+    color: green;
+}
+.material-icons.fail {
+    color: red;
+}
+
+.material-icons {
+  vertical-align: middle;
+}
+
+.input-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.input-border {
+  border: 1px solid var(--outline);
+  border-radius: 10px;
+  padding: 8px;
+}

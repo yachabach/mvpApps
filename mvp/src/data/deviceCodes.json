@@ -1,0 +1,136 @@
+{
+  "frequency": {
+    "rules": {
+      "default": 45
+    },
+    "code": 71,
+    "dataPath": "stimulation.frequency"
+  },
+  "pulseWidth": {
+    "rules": {
+      "default": 200
+    },
+    "code": 72,
+    "dataPath": "stimulation.pulseWidth"
+  },
+  "waveform": {
+    "rules": {
+      "default": 0,
+      "off": 0,
+      "false": 0,
+      "monophasic": 0,
+      "on": 1,
+      "biphasic": 1,
+      "true": 1
+    },
+    "code": 73,
+    "dataPath": "stimulation.waveform"
+  },
+  "outletPort": {
+    "rules": {
+      "default": 2,
+      "both": 2,
+      "left": 0,
+      "right": 1
+    },
+    "code": 74,
+    "dataPath": "outletPort"
+  },
+  "programLength": {
+    "rules": {
+      "default": 30
+    },
+    "code": 75,
+    "dataPath": "programLength"
+  },
+  "currentLower": {
+    "rules": {
+      "default": 0
+    },
+    "code": 77,
+    "dataPath": "stimulation.amplitudeRange.lo"
+  },
+  "currentUpper": {
+    "rules": {
+      "default": 10
+    },
+    "code": 78,
+    "dataPath": "stimulation.amplitudeRange.hi"
+  },
+  "calibrationFrequency": {
+    "rules": {
+      "default": 0,
+      "once": 0,
+      "every use": 1
+    },
+    "code": 79,
+    "dataPath": "calibration.frequency"
+  },
+  "calibrationStart": {
+    "rules": {
+      "default": 2
+    },
+    "code": 80,
+    "dataPath": "calibration.startingAmplitude"
+  },
+  "calibrationStep": {
+    "rules": {
+      "default": 0.5
+    },
+    "code": 81,
+    "dataPath": "calibration.amplitudeIncrements"
+  },
+  "calibrateTo": {
+    "rules": {
+      "default": 0,
+      "perception": 0,
+      "discomfort": 1
+    },
+    "code": 83,
+    "dataPath": "calibration.calibrationLimit.to"
+  },
+  "postCalibrateChange": {
+    "rules": {
+      "default": 0,
+      "no change": 0,
+      "increase": 1,
+      "decrease": 2
+    },
+    "code": 84,
+    "dataPath": "calibration.calibrationLimit.then.trend"
+  },
+  "postCalibrateType": {
+    "rules": {
+      "default": 0,
+      "perception": 0
+    },
+    "code": 85,
+    "dataPath": "calibration.calibrationLimit.then.type"
+  },
+  "postCalibrateAmount": {
+    "rules": {
+      "default": 2
+    },
+    "code": 86,
+    "dataPath": "calibration.calibrationLimit.then.amount"
+  },
+  "impedanceInitiate": {
+    "rules": {
+      "default": 0,
+      "check": 1,
+      "true": 1,
+      "false": 0
+    },
+    "code": 99,
+    "dataPath": "impedance.initiate"
+  },
+  "impedanceMonitor": {
+    "rules": {
+      "default": 0,
+      "true": 1,
+      "false": 0
+    },
+    "code": 100,
+    "dataPath": "impedance.monitor"
+  }
+}

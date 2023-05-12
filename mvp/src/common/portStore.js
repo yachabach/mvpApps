@@ -11,15 +11,14 @@ export const  usePortStore = defineStore('port', () => {
 
   //state
   const activePort = ref(undefined)
-  const activeReader = ref(undefined)
+  const receivedMsgs = ref(Array(0))
   let quitListen = false
 
   //getters
   const browserCapable = computed(() => { return "serial" in navigator})
-  const portAuthorized = computed(() => {
-    console.log('Checking status of COM port')
-    return activePort.value
-  })
+  const portAuthorized = computed(() => activePort.value)
+  const portOpen = computed(() => activePort.value ? activePort.value.readable : false)
+  const receivedMessages = computed(() => receivedMsgs.value)
 
   //actions
   async function changeActivePort() {
@@ -30,6 +29,10 @@ export const  usePortStore = defineStore('port', () => {
         await forgetPort(activePort.value)
         await initializePort()
     }
+  }
+
+  function addReceivedMessage(msg) {
+    receivedMsgs.value.shift(msg)
   }
 
   /**
@@ -45,7 +48,7 @@ export const  usePortStore = defineStore('port', () => {
     } else {
       logEvent('Opening Port')
       await openActivePort();
-      listenToActivePort(msg => logEvent('Received: ' + msg));
+      listenToActivePort();
     }
   }
 
@@ -124,29 +127,27 @@ export const  usePortStore = defineStore('port', () => {
     const listenToActivePort = async (callback = () => {}) => {
       logEvent('Started Listening to port...')
       while (activePort.value.readable && !quitListen) {
-        const reader = activePort.value.readable.getReader() // activeReader.value = await openReader();
+        const reader = activePort.value.readable.getReader()
         try {
           while (true) {
-            const { value, done } = await reader.read() // activeReader.value.read();
+            const { value, done } = await reader.read()
             if (done) {
               // Allow the serial port to be closed later.
-              reader.releaseLock() // activeReader.value.releaseLock()
+              reader.releaseLock()
               break;
             }
             if (value) {
-              console.log('Received msg from listen: ', value)
+              receivedMsgs.value.push(value[0])
               callback(value)
             }
           }
         } catch (error) {
           console.log('Non-fatal error in listen to port: ', error)
           quitListen = true
-        } finally {
-          // await closeReader();
         }
+        logEvent('Stopped listening to port...')  
+        quitListen = false
       }
-      logEvent('Stopped listening to port...')  
-      quitListen = false
     }
 
     const utfEncoder = new TextEncoder();
@@ -171,7 +172,7 @@ export const  usePortStore = defineStore('port', () => {
 
   return { 
     activePort, 
-    activeReader,
+    receivedMsgs,
     changeActivePort, 
     initializePort, 
     portStatus,
@@ -179,6 +180,9 @@ export const  usePortStore = defineStore('port', () => {
     disconnectPort,
     writeToPort,
     browserCapable,
-    portAuthorized
+    portAuthorized,
+    portOpen,
+    addReceivedMessage,
+    receivedMessages
   }
 })

@@ -1,20 +1,25 @@
 import { createRouter, createWebHistory } from 'vue-router'
-// import HomeView from '../views/HomeView.vue'
-import EvrenMVP from '../views/EvrenMVP.vue'
-import ComMainPage from '../views/ComMainPage.vue'
+import UtilityPage from '../views/UtilityPage.vue'
+import EvrenMVP5 from '@/views/EvrenMVP5.vue'
+import EvrenMVP6 from '@/views/EvrenMVP6.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: ComMainPage
+      name: 'EvrenMVP6',
+      component: EvrenMVP6
     },
     {
-      path: '/EvrenMVP',
-      name: 'EvrenMVP',
-      component: EvrenMVP
+      path: '/5',
+      name: 'EvrenMVP5',
+      component: EvrenMVP5
+    },
+    {
+      path: '/utility',
+      name: 'utility',
+      component: UtilityPage
     },
     {
       path: '/about',

@@ -1,0 +1,35 @@
+{
+  "programName": "Change Range Test",
+  "contact": {
+    "name": "Evren Test Program",
+    "phone": "3522629164"
+  },
+  "outletPort": "left",
+  "programLength": "00:15:00",
+  "stimulation": {
+    "waveform": "monophasic",
+    "amplitudeRange": {
+      "currentLower": "2.4",
+      "currentUpper": "8.2"
+    },
+    "pulseWidth": 200,
+    "frequency": 50
+  },
+  "impedance": {
+    "impedanceInitiate": false,
+    "impedanceMonitor": false
+  },
+  "calibration": {
+    "calibrationFrequency": "once",
+    "calibrationStart": 2,
+    "calibrationStep": 0.5,
+    "calibrationLimit": {
+      "calibrateTo": "perception",
+      "then": {
+        "postCalibrateType": "percent",
+        "postCalibrateStep": 2,
+        "postCalibrateTrend": "Increase"
+      }
+    }
+  }
+}

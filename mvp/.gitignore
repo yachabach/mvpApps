@@ -13,6 +13,7 @@ dist
 dist-ssr
 coverage
 *.local
+TestCode
 
 /cypress/videos/
 /cypress/screenshots/

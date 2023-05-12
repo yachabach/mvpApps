@@ -1,6 +1,6 @@
 <template>
     <section>
-        <h2>Com Port Section</h2>
+        <!-- <h2>Com Port Section</h2> -->
         <ItemStatusLine :success="browserCapable"
             :successPhrase="'Browser is COM compatable'"
             :failPhrase="'Browser is NOT COM compatable'"

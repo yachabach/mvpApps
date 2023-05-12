@@ -1,6 +1,6 @@
 <template>
     <section>
-        <h2>Message Section</h2>
+        <!-- <h2>Message Section</h2> -->
         <!-- <section class="card-foundation">
             <div class="card-section"> -->
                 <button class="button-list" @click="handleHelloWorld">
@@ -58,7 +58,7 @@ const handleHelloWorld = () => {
 
 const handleDeviceConnect = () => {
     console.log('Connect message: ', dms.deviceConnectMessage)
-    portStore.writeStreamToPort(dms.deviceConnectMessage, addToSentMessages)
+    portStore.writeToPort(dms.deviceConnectMessage, addToSentMessages)
 }
 
 const handleACK = () => {

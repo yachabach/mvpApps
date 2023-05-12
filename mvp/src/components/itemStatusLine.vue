@@ -32,15 +32,6 @@ span {
     /* display: inline-block; */
     vertical-align: middle;
 }
-.material-icons.success {
-    color: green;
-}
-.material-icons.fail {
-    color: red;
-}
 
-.material-icons {
-  vertical-align: middle;
-}
 
 </style>

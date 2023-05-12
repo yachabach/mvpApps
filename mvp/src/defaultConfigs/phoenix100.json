@@ -1,0 +1,42 @@
+{
+    "commands": {
+        "init": "0x03",
+        "write": "0x00",
+        "read": "0x01",
+        "reset": "0x04",
+        "phone": "0x6E",
+        "setTime": "0x6F",
+        "sendSDCard": "0x66",
+        "response": "0x02",
+        "transfer": "0x04",
+        "adherence": "0x65",
+        "serialNumber": "0x6C",
+        "sessionNumber": "0x6D"
+    },
+
+    "protocol": {
+        "msgInit": "0x37",
+        "ACK": "0xFF",
+        "NACK": "0xF0"
+    },
+
+    "parameterCodes": {
+        "frequency": "0x47",
+        "pulseWidth": "0x48",
+        "waveform": "0x49",
+        "outletPort": "0x4A",
+        "programLength": "0x4B",
+        "currentLower": "0x4D",
+        "currentUpper": "0x4E",
+        "calibrationFrequency": "0x4F",
+        "calibrationStart": "0x50",
+        "calibrationStep": "0x51",
+        "calibrateTo": "0x53",
+        "postCalibrateTrend": "0x54",
+        "postCalibrateType": "0x55",
+        "postCalibrateStep": "0x56",            
+        "impedanceInitiate": "0x63",
+        "impedanceMonitor": "0x64"
+    }
+}
+
