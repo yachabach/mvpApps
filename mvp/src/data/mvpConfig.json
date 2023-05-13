@@ -5,11 +5,29 @@
         "stopBits": 1,
         "parity": "none"
     },
+    "formButtons": {
+        "cancel": {
+            "label": "Cancel",
+            "id": "cancel"
+        },
+        "save": {
+            "label": "Save",
+            "id": "save"
+        },
+        "saveAs": {
+            "label": "Save As",
+            "id": "saveAs"
+        },
+        "ok": {
+            "label": "OK",
+            "id": "ok"
+        }
+    },
     "defaultProgram": {
         "programName": "Default Program",
         "contact": {
-            "name": "Evren Default Program",
-            "phone": ""
+            "adherenceContact": "Evren Default Program",
+            "adherencePhone": ""
         },
         "outletPort": "both",
         "programLength": "00:15:00",

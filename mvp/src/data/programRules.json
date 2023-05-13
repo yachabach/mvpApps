@@ -21,7 +21,7 @@
         "right": 1
     },
     "programLength":{
-        "default": 30
+        "default": 120
     },    
     "currentLower":{
         "default": 0

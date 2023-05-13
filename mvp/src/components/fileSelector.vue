@@ -22,12 +22,12 @@ const emit = defineEmits(['fileChosen'])
 const props = defineProps(['fileHandle'])
 
 const handleChoose = async () => {
-        const [fileHandle] = await window.showOpenFilePicker(); 
-        console.log('File Handle Chosen: ', fileHandle)
-        fileHandle ? emit('fileChosen', fileHandle) : {}
+    const [fileHandle] = await window.showOpenFilePicker(); 
+    console.log('File Handle Chosen: ', fileHandle)
+    if (fileHandle) {emit('fileChosen', fileHandle)}
 };
 
-const currentFile = computed(() => props.fileHandle ? props.fileHandle.name : 'No file selected')
+const currentFile = computed(() => props.fileHandle.name ? props.fileHandle.name : 'No file selected')
 
 </script>
 

@@ -73,12 +73,6 @@ header {
     padding: 16px;
 }
 
-.input-area {
-    display: flex;
-    justify-content: space-around;
-    gap: 16px;
-}
-
 .program {
     grid-area: program;
 }
@@ -116,11 +110,6 @@ button {
     cursor: pointer;
 }
 
-.row-inputs {
-    display: flex;
-    justify-content: space-between;
-    gap: 8px;
-}
 
 .line-breaks {
     white-space: pre-line;

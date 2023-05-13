@@ -1,0 +1,21 @@
+{
+  "programName": "Another One",
+  "adherenceContact": "Auto Save As",
+  "adherencePhone": "",
+  "frequency": 50,
+  "pulseWidth": 200,
+  "waveform": "monophasic",
+  "outletPort": "both",
+  "programLength": "00:15:00",
+  "currentLower": 0,
+  "currentUpper": 10,
+  "calibrationFrequency": "every",
+  "calibrationStart": 2,
+  "calibrationStep": 0.5,
+  "calibrateTo": "discomfort",
+  "postCalibrateTrend": "Increase",
+  "postCalibrateType": "percent",
+  "postCalibrateStep": 2,
+  "impedanceInitiate": true,
+  "impedanceMonitor": true
+}

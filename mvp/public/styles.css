@@ -242,6 +242,13 @@ tag.  This means that these variable apply to the entire document*/
   vertical-align: middle;
 }
 
+.input-area {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px;
+}
+
 .input-fields {
   display: flex;
   flex-direction: column;
@@ -252,4 +259,11 @@ tag.  This means that these variable apply to the entire document*/
   border: 1px solid var(--outline);
   border-radius: 10px;
   padding: 8px;
+}
+
+.row-inputs {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: nowrap;
 }

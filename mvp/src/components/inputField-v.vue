@@ -6,7 +6,7 @@
         </label>
         <input 
             :id="id" :type="type" 
-            :value="value" 
+            :value="modelValue" 
             @input="handleInput"
             :pattern="pattern" 
             :class="classList"
@@ -20,7 +20,7 @@
 <script setup>
 
 const props = defineProps([
-    'value',
+    'modelValue',
     'labelName',
     'id',
     'type',
@@ -31,8 +31,13 @@ const props = defineProps([
     'min', 'max', 'step',
 ]);
 
-</script>
+const emit = defineEmits(['update:modelValue'])
 
+const handleInput = e => {
+    emit('update:modelValue', e.target.value);
+}
+
+</script>
 
 <style scoped>
 label {
@@ -52,11 +57,11 @@ input {
 
 input:focus {
     border: thin var(--outline);
-    background-color: var(--primary-light);
+    background-color: var(--outline);
 }
 
 input:hover {
-    background-color: var(--primary-light);
+    background-color: var(--outline);
 }
 
 input[type=text], input[type=tel] {

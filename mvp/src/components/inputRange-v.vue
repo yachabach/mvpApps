@@ -7,7 +7,7 @@
                 <input 
                     id="lo"
                     type="number"
-                    :value="props.rangeLo"
+                    :value="rangeLo"
                     class="input-field"
                     min="0" :max="loMax" step="0.1"
                     @change="handleRangeChange"/>
@@ -16,7 +16,7 @@
                     class="input-field"
                     id="hi"
                     type="number"
-                    :value="props.rangeHi"
+                    :value="rangeHi"
                     :min="hiMin" max="10" step="0.1" 
                     @change="handleRangeChange"/>
             </div>
@@ -35,7 +35,10 @@ const props = defineProps([
     'rangeHi'
 ])
 
-const emit = defineEmits(['updateRange'])
+const emit = defineEmits([
+    'update:rangeLo', 
+    'update:rangeHi'
+])
 
 const loMax = computed(() => props.rangeHi)
 const hiMin = computed(() => props.rangeLo)
@@ -45,14 +48,14 @@ const limitRelative = {
     hi:hiValue => (hiValue <= props.rangeLo) ? props.rangeLo : hiValue
 }
 
-const handleRangeChange = e => {
-    const newRange = {
-        lo: props.rangeLo,
-        hi: props.rangeHi
-    }
-    console.log('newRange before update: ', newRange)
-    newRange[e.target.id] = limitRelative[e.target.id](Number(e.target.value))
-    emit('updateRange', newRange)
+const emitEvent = {
+    lo: 'update:rangeLo',
+    hi: 'update:rangeHi'
+}
+
+const handleRangeChange = e => {  
+    emit(emitEvent[e.target.id], 
+        limitRelative[e.target.id](Number(e.target.value)))
 }
 
 </script>

@@ -1,6 +1,7 @@
 import { SerialCodes } from "./serialCodes"
 import { JsonFunctions } from "./jsonFunctions";
 import deviceCodes from '@/data/deviceCodes.json'
+import { parameterCodes } from '@/defaultConfigs/phoenix100.json'
 
 const sc = SerialCodes();
 const { getValueByPath } = JsonFunctions()

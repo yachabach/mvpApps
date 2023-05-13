@@ -1,49 +1,71 @@
 <template>
-    <section>
-        <h4>This is a Flex-Grow</h4>
-        <h5>A,B,C and F are flex-grow:1 . D and E are flex-grow:2 .</h5>
-        <div id="content">
-            <div class="small" style="background-color:red;">A</div>
-            <div class="small" style="background-color:lightblue;">B</div>
-            <div class="small" style="background-color:yellow;">C</div>
-            <div class="double" style="background-color:brown;">D</div>
-            <div class="double" style="background-color:lightgreen;">E</div>
-            <div class="small" style="background-color:brown;">F</div>
-        </div>        
-    </section>
-
-
-  
+    <form class="form-wrapper"
+      @submit.prevent="handleSubmit">
+      <div class="form-area">
+        <slot />
+      </div>
+      <div class="button-area">
+        <button v-for="button in buttonList"
+          :key="button.id"
+          :id="button.id">
+            {{button.label}}
+        </button>
+      </div>
+    </form>
 </template>
 
 <script setup>
+import { formButtons } from '@/data/mvpConfig.json'
+
+const buttonList = [
+  formButtons['cancel'],
+  formButtons['saveAs'],
+  formButtons['save']
+]
+
+const handleSubmit = e => {
+  e.preventDefault()
+  console.log('formElement submitted by: ', e.submitter.id)
+  console.log('keypressed: ', e.target.keypressed)
+  console.log('submission object: ', e)
+}
 
 </script>
 
 <style scoped>
-
-section {
+.form-wrapper {
+  display: grid;
+  grid-template-areas: 
+    "form-area"
+    "button-area";
+  grid-template-rows: 1fr 56px;
+  height: 100%;
 }
 
-#content {
+.form-area {
+  grid-area: form-area;
+  background-color: var(--neutral);
+}
+
+.button-area {
+  grid-area: button-area;
   display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  /* flex-flow: row wrap;
-  align-items: stretch; */
-    height: 100%;
-    min-height: 100%;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 16px;
 }
 
-.small {
-  flex: 1;
-  border: 3px solid rgba(0, 0, 0, 0.2);
+button {
+    padding: 4px 12px;
+    width: 100px;
+    height: 24px;
+    border-radius: 4px;
+    color: var(--hyperlink);
+    font-size: var(--titleFont);
+    font-weight: var(--titleWeight);
+    vertical-align: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
 }
-
-.double {
-  flex: 2;
-  border: 3px solid rgba(0, 0, 0, 0.2);
-}
-
-
 </style>

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="spread-header">
         <img src="/EvrenPhoenixProduct.png" alt="Phoenix Product Logo">
         <img src="/EvrenLogo.png" alt="Evren Logo">
     </div>
@@ -10,13 +10,13 @@
 </script>
 
 <style scoped>
-div {
+.spread-header {
     display: flex;
     justify-content: space-between;
     padding: 0px 16px;
     gap: 16px;
-    background-color: white;
-    align-content: center;
+    background: transparent;
+    align-items: center;
 }
 
 img {
