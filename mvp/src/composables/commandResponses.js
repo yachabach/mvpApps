@@ -1,4 +1,4 @@
-import { usePortStore } from '@/common/portStore2.js'
+import { usePortStore } from '@/common/portStore.js'
 import {DeviceMessageService} from '@/composables/deviceMessageService.js'
 import { useLogStore } from '@/common/logStore.js'
 

@@ -1,27 +1,14 @@
 import { parameterCodes, protocol, commands } from '@/defaultConfigs/phoenix100.json'
-import { programRules } from '@/composables/programRules.js'
+import { Phoenix100Rules } from '@/programRules/phoenix100Rules'
 
 export const DeviceMessageService = () => {
 
     const parameterKeys = Object.keys(parameterCodes)
-    const ruleKeys = Object.keys(programRules)
-
-    const  convertDurationtoSeconds = duration => {
-        const [hours, minutes, seconds] = duration.split(':');
-        return Number(hours) * 60 * 60 + Number(minutes) * 60 + Number(seconds);
-    }
-
-    const applyRule = (key, value) => {
-        if (Number(value)) {
-            return value
-        } else {
-            return ruleKeys.includes(key) ? programRules[key](value) : programRules.default
-        }
-    }
+    const { applyRules } = Phoenix100Rules()
 
     const buildMessageCore = program => {
         return parameterKeys.reduce((msg, key) => {
-            msg.concat(parameterCodes[key], applyRule(key, program[key]))
+            msg.concat(parameterCodes[key], applyRules(key, program[key]))
         })
     }
 
@@ -36,8 +23,7 @@ export const DeviceMessageService = () => {
 
     const programMessageBuilder = program => {
         const payload = buildMessageCore(program)
-        programMessage = commandMessageBuilder(commands.write, payload)
-
+        return commandMessageBuilder(commands.write, payload)
     }
 
     // const connectDevice = commandMessageBuilder([0x36])
@@ -60,12 +46,8 @@ export const DeviceMessageService = () => {
     return {
         programMessageBuilder,
         connectDevice,
-        ACK,
-        NACK,
-        READ,
-        WRITE,
-        RESET,
-        PHONE,
-        SETTIME
+        ACK, NACK,
+        READ, WRITE,
+        RESET, PHONE, SETTIME
     }
 }

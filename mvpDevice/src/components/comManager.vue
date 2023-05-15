@@ -31,7 +31,7 @@ import StatusLine from '@/components/statusLine.vue'
 import ButtonOval from '@/components/buttonOval.vue'
 import { portAuthButton} from '@/data/mvpConfig.json'
 
-import { usePortStore } from '@/common/portStore2.js'
+import { usePortStore } from '@/common/portStore.js'
 import { storeToRefs } from 'pinia'
 import { computed, onUnmounted, reactive } from 'vue'
 import { CommandResponses } from '@/composables/commandResponses.js'

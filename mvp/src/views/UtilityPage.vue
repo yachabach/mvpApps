@@ -16,11 +16,6 @@ import phoenix100 from '@/defaultConfigs/phoenix100.json'
 import { JsonFunctions } from '@/composables/jsonFunctions';
 import programKeywords from '@/defaultConfigs/programElementRequirements.json';
 
-
-    const { deepHasKey } = JsonFunctions()
-
-    console.log('programKeywords: ', programKeywords)
-
     const requiredKeys = programKeywords.concat(Object.keys(phoenix100.parameterCodes))
 console.log('requiredKeys: ', requiredKeys)
 // 

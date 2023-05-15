@@ -7,32 +7,25 @@ export const  usePortStore = defineStore('port', () => {
   
   const { logEvent } = useLogStore()
 
-  logEvent('Started portStore')
+  // logEvent('Started portStore')
+  console.log('starting portStore2')
 
   //state
   const activePort = ref(undefined)
-  const receivedMsgs = ref(Array(0))
-  let quitListen = false
 
   //getters
   const browserCapable = computed(() => { return "serial" in navigator})
-  const portAuthorized = computed(() => activePort.value)
-  const portOpen = computed(() => activePort.value ? activePort.value.readable : false)
-  const receivedMessages = computed(() => receivedMsgs.value)
+  const portAuthorized = computed(() => !!activePort.value)
 
   //actions
   async function changeActivePort() {
     const newPort = await authorizePort()
     if (newPort) {
-        console.log('forgetting active port...')
-        // await forgetActivePort()
-        await forgetPort(activePort.value)
-        await initializePort()
+      console.log('forgetting active port...')
+      await forgetPort(activePort.value)
+      activePort.value = [...await navigator.serial.getPorts()][0]
+      await initializePort()
     }
-  }
-
-  function addReceivedMessage(msg) {
-    receivedMsgs.value.shift(msg)
   }
 
   /**
@@ -41,17 +34,15 @@ export const  usePortStore = defineStore('port', () => {
    * since we cannot do it programatically.
    */
   async function initializePort() {
+    console.log('starting initializePort')
     await trimPorts()
-    activePort.value = [...await navigator.serial.getPorts()][0]
     if (!activePort.value) {
-      alert('No COM port connected.  \nClick "Connect Port" to connect a COM Port.')
+      alert('You must authorize a COM port for this browser.')
     } else {
       logEvent('Opening Port')
       await openActivePort();
-      listenToActivePort();
     }
   }
-
 
   /**Serial Port authorization
    * 
@@ -92,20 +83,29 @@ export const  usePortStore = defineStore('port', () => {
   const openActivePort = async () => {
     try {
       await activePort.value.open(config.comProtocol)
-      console.log('just opened port: ', activePort.value)
-      console.log('readable property is: ', activePort.value.readable)
     }catch (err) {
       console.log('Error in portStore opening active port: ', err)
     }
   }
 
   const disconnectPort = async () => {
-    quitListen = true
     await forgetPort(activePort.value)
-    quitListen = false
     await initializePort()
   }
 
+  const closeActivePort = async () => {
+    try {
+      await activePort.value.close()
+    } catch (err) {
+      console.log('Error closing port in portStore.js')
+    }
+  }
+
+  const activePortSignals = async () => {
+    return await activePort.value.getSignals()
+  }
+
+    
   const portStatus = async () => {
     let status = ''
     if (activePort.value) {
@@ -119,70 +119,23 @@ export const  usePortStore = defineStore('port', () => {
     return status
   }
 
-  const activePortSignals = async () => {
-    return await activePort.value.getSignals()
+      /**Initialize the Pinia 
+   * Make sure the activePort state is correct
+   **/
+  const initPortPinia = async () => {
+    activePort.value = [...await navigator.serial.getPorts()][0]  
   }
-
-    // from: https://developer.chrome.com/en/articles/serial/
-    const listenToActivePort = async (callback = () => {}) => {
-      logEvent('Started Listening to port...')
-      while (activePort.value.readable && !quitListen) {
-        const reader = activePort.value.readable.getReader()
-        try {
-          while (true) {
-            const { value, done } = await reader.read()
-            if (done) {
-              // Allow the serial port to be closed later.
-              reader.releaseLock()
-              break;
-            }
-            if (value) {
-              receivedMsgs.value.push(value[0])
-              callback(value)
-            }
-          }
-        } catch (error) {
-          console.log('Non-fatal error in listen to port: ', error)
-          quitListen = true
-        }
-        logEvent('Stopped listening to port...')  
-        quitListen = false
-      }
-    }
-
-    const utfEncoder = new TextEncoder();
-    // const utfDecoder = new TextDecoder();
-
-    const writeToPort = async (msg, callback = () => {}) => {
-      let writer
-      try {
-        writer = activePort.value.writable.getWriter()
-        const fixType = (typeof(msg) === 'string') ? utfEncoder.encode(msg) : msg
-        const utfMsg = new Uint8Array(fixType);
-        console.log('msg type: ', typeof(msg))
-        await writer.write(utfMsg);
-        callback(msg)            
-      } catch (err) {
-        console.log('Error writing to device: ', err)
-      } finally {
-        logEvent(`Wrote to COM Port: ${msg}`)
-        writer.releaseLock()
-      }
-    }
+  initPortPinia()
 
   return { 
-    activePort, 
-    receivedMsgs,
+    activePort,
+    closeActivePort,
     changeActivePort, 
     initializePort, 
-    portStatus,
     activePortSignals,
     disconnectPort,
-    writeToPort,
     browserCapable,
     portAuthorized,
-    portOpen,
-    addReceivedMessage,
-    receivedMessages
+    portStatus
   }
 })

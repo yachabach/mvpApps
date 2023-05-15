@@ -1,6 +1,7 @@
 <template>
     <section>
         <button
+            id="id"
             :disabled="disabled"
             @click="handleClick">
             <div class="button-label">
@@ -25,6 +26,7 @@ const props = defineProps({
         remedy: String,
         showRemedy: false
     },
+    id: String,
     disabled: Boolean,
     success: Boolean
 })
@@ -33,7 +35,7 @@ const emit = defineEmits(['ovalClick'])
 
 const handleClick = e => {
     // e.preventDefault()
-    console.log('clicked id: ', e.target.id)
+    console.log('clicked id: ', e.target.innerHTML)
     emit('ovalClick', e.target.id )
 }
 

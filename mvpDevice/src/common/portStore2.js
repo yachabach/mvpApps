@@ -210,7 +210,7 @@ export const  usePortStore = defineStore('port', () => {
     return res
   }
 
-  const dialogWithPort = async (sendMsg, timeout) => {
+  const exchangeMessages = async (sendMsg, timeout) => {
 
     console.log('opened port')
 
@@ -264,7 +264,7 @@ export const  usePortStore = defineStore('port', () => {
     closeActivePort,
     receivedMsgs,
     readFromPortWithTimeout,
-    dialogWithPort,
+    exchangeMessages,
     changeActivePort, 
     initializePort, 
     portStatus,

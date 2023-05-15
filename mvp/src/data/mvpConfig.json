@@ -128,7 +128,7 @@
         "failPhrase": "Port is not authorized",
         "remedy": "Click to authorize Serial Com port"        
     },   
-    "listenButton": {
+    "connectButton": {
         "successPhrase": "Test Connection",
         "failPhrase": "",
         "remedy": "Click to test connection"        

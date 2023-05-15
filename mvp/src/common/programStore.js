@@ -5,7 +5,7 @@ import { defaultProgram } from '@/data/mvpConfig.json'
 
 export const  useProgramStore = defineStore('program', () => {
 
-  const { requiredKeys, requiredFields } = ProgramValidator();
+  const { requiredFields } = ProgramValidator();
 
   //state
   const reactiveObject = reactive({
@@ -21,12 +21,13 @@ export const  useProgramStore = defineStore('program', () => {
   async function loadProgramFile(fileHandle){
     const file = await fileHandle.getFile()
     const newProgram = JSON.parse(await file.text())
-    reactiveObject.program = requiredFields(newProgram, requiredKeys)
+    reactiveObject.program = requiredFields(newProgram)
     updateFileHandle(fileHandle)
   }
 
   function loadDefaultProgram() {
-    reactiveObject.program = requiredFields(defaultProgram, requiredKeys)
+    reactiveObject.program = requiredFields(defaultProgram)
+    console.log('required fields: ', reactiveObject.program)
   }
 
   function updateFileHandle(fileHandle) {

@@ -8,21 +8,17 @@ export const ProgramValidator = () => {
 
     const requiredKeys = programKeywords.concat(Object.keys(phoenix100.parameterCodes))
 
-    const validProgram = programObject => 
-        requiredKeys.reduce(
-            (res, key) => res && deepHasKey(programObject, key), true)
+    const hasAllKeys = programObject => 
+        requiredKeys.every(key => deepHasKey(programObject, key))
 
-    const requiredFields = (obj, keyList) => {
-        let res = {}
-        keyList.forEach( key => {
+    const requiredFields = (obj) => 
+        requiredKeys.reduce((res, key) =>{
             res[key] = getValue(obj, key)
-        })
-        return res
-    }
+            return res
+        }, {})
 
     return Object.freeze({
         requiredFields,
-        requiredKeys,
-        validProgram
+        hasAllKeys
     })
 }
