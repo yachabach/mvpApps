@@ -74,8 +74,8 @@ const handleRangeChange = e => {
 }  
 
 .input-field {
-    /* display: block; */
     height: 40px;
+    width: 100px;
     padding: 8px;
     align-items: center;
     font-weight: var(--inputTextWeight);

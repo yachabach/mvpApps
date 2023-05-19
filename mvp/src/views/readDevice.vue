@@ -21,7 +21,7 @@
 
 <script setup>
 import FormElement from '@/components/formElement.vue'
-import ProgramEditForm from '@/components/programEditFormContent.vue'
+import ProgramEditForm from '@/components/deviceProgramFormContent.vue'
 import { useRouter } from 'vue-router'
 import DeviceManager from '@/components/deviceManager.vue'
 import { useProgramStore } from '@/common/programStore.js'

@@ -41,7 +41,7 @@ const handleFileChosen = async handle => {
 }
 
 const handleFormSubmit = async e => {
-    await handleSubmit[e.submitter.id]()
+    await handleSubmit[e.submitter.id](program.value, programFileHandle.value)
 }
 
 </script>

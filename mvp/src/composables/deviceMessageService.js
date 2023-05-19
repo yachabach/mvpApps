@@ -19,16 +19,25 @@ export const DeviceMessageService = () => {
                 msg.concat(parameterCodes[key]), [])        
     }
 
+    const msgSum = msg => msg.reduce((s, m) => s + parseInt(m),0)
+
+    const checkSum = msg => msgSum(msg) & parseInt('0xff')
+
     const commandMessageBuilder = (command, payload='') => {
-        let deviceCommand = [protocol.msgInit]
-        const msgLength = ((payload.length*2) + 4).toString(16)
-        deviceCommand = deviceCommand
-            .concat(msgLength, command)
-        if (payload) {
-            deviceCommand = deviceCommand.concat(payload)
-        }
-        return deviceCommand
+        const msgLength = ((payload.length) + 2).toString(16)
+        let deviceCommand = [protocol.msgInit].concat(msgLength, command, ...payload)
+        return deviceCommand.concat('0x' + checkSum(deviceCommand).toString(16))         
     }
+
+    const makeBytes = num => [(num & '0xFF00').toString(16), (num & '0xFF').toString(16)]
+
+    const buildParameterMessage = (program, parameter) => {
+        const payload = [parameterCodes[parameter], ...makeBytes(program[parameter])]
+        return commandMessageBuilder(commands.write, payload)
+    }
+
+    const buildParamMsgList = program => 
+        parameterKeys.reduce((msgList, param) => msgList.concat([buildParameterMessage(program, param)]),[])
 
     const programMessageBuilder = program => {
         const payload = buildProgamCore(program)
@@ -54,6 +63,8 @@ export const DeviceMessageService = () => {
     return {
         programMessageBuilder,
         requestMessageBuilder,
+        buildParameterMessage,
+        buildParamMsgList,
         connectDevice,
         ACK, NACK,
         RESET, PHONE

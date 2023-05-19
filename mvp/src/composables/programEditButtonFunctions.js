@@ -1,33 +1,39 @@
 import { FileFunctions } from "./fileFunctions"
 import { useProgramStore } from '@/common/programStore.js'
-import { storeToRefs } from "pinia";
+import { useRouter } from "vue-router";
+// import { storeToRefs } from "pinia";
 
 export const ProgramFormFunctions = () => {
 
     const { getNewFileHandle, writeFile } = FileFunctions();
-    const { program, programFileHandle } = storeToRefs(useProgramStore())
+    // const { program, programFileHandle } = storeToRefs(useProgramStore())
     const { updateFileHandle, loadDefaultProgram, loadProgramFile } = useProgramStore();
+    const router = useRouter()
 
     const handleSubmit = {
-        saveAs: async () => {
-            const fileHandle = await getNewFileHandle()
+        saveAs: async (program, fileHandle) => {
+            fileHandle = await getNewFileHandle()
             await writeFile(fileHandle, JSON.stringify(program.value, null, 2))
             updateFileHandle(fileHandle)
             return undefined
         },
-        save: async () => {
-            console.log('handling save. File handle: ', programFileHandle.value)
-            if (programFileHandle.value.name) {
-                await writeFile(programFileHandle.value, JSON.stringify(program.value, null, 2))
+
+        save: async (program, fileHandle) => {
+            if (fileHandle.name) {
+                await writeFile(fileHandle, JSON.stringify(program, null, 2))
             } else {
-                handleSubmit['saveAs']()
+                handleSubmit['saveAs'](program, fileHandle)
             }
             return undefined
         },
-        cancel: async () => {
-            if (confirm('Lose changes to this program?')) {
-                programFileHandle.value.name ? 
-                    await loadProgramFile(programFileHandle.value) :
+
+        cancel: async (program, fileHandle) => {
+            console.log('path: ', router.currentRoute.value.name)
+            if (router.currentRoute.value.name === 'readDevice') {
+                router.push({path: '/'})
+            } else if (confirm('Lose changes to this program?')) {
+                fileHandle.name ? 
+                    await loadProgramFile(fileHandle) :
                     loadDefaultProgram()                
             }
             return undefined

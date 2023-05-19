@@ -19,12 +19,13 @@ export const DeviceManagerButtonFunctions = () => {
             return await runDialog(dms.connectDevice, 5000)
         },
 
-        writeButton: () => {
-            console.log('pushing to device read')
-            router.push({name: 'readDevice'})
+        writeButton: program => {
+            console.log('parameter message: ', dms.buildParamMsgList(program))
+            // router.push({name: 'readDevice'})
         },
 
         readButton: () => {
+            console.log('Reading Program from Device')
             return 'openReadModal'
         },
 

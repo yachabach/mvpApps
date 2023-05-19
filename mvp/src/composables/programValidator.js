@@ -11,14 +11,19 @@ export const ProgramValidator = () => {
     const hasAllKeys = programObject => 
         requiredKeys.every(key => deepHasKey(programObject, key))
 
-    const requiredFields = (obj) => 
+    const flattenProgram = (obj) => 
         requiredKeys.reduce((res, key) =>{
             res[key] = getValue(obj, key)
             return res
         }, {})
 
+    // const fieldsVerified = () => {}
+
+    // const applyAllRules = program => {}
+
     return Object.freeze({
-        requiredFields,
+        requiredKeys,
+        flattenProgram,
         hasAllKeys
     })
 }
