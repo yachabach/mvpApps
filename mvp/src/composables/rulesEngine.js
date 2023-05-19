@@ -22,7 +22,6 @@ export const RulesEngine = importedRules => {
                     value) : value              
     }
 
-
 /**
  * 
  * @param {default, min, max} ruleObj 

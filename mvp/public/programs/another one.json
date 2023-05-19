@@ -13,7 +13,7 @@
   "calibrationStart": 2,
   "calibrationStep": 0.5,
   "calibrateTo": "discomfort",
-  "postCalibrateTrend": "Increase",
+  "postCalibrateChange": "Increase",
   "postCalibrateType": "percent",
   "postCalibrateStep": 2,
   "impedanceInitiate": true,

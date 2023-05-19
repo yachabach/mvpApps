@@ -108,7 +108,7 @@
                 <SelectField 
                     label="Trend"
                     id="trend"
-                    v-model="program.postCalibrateTrend" 
+                    v-model="program.postCalibrateChange" 
                     type="text"
                     pattern="Increase|No Change|Decrease"
                     classList="box center"

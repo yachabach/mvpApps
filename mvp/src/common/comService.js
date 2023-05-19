@@ -7,12 +7,12 @@ import phoenix100 from '@/defaultConfigs/phoenix100.json';
 
 export const ComService = () => {
     
-    const { activePort } = storeToRefs(usePortStore())
+    const { getReaderWithTimeout } = usePortStore()
+    const { activePort, listening } = storeToRefs(usePortStore())
     const { logEvent } = useLogStore()
-    const { protocol } = phoenix100.protocol
+    const protocol = phoenix100.protocol
 
     const receivedMsgs = ref(Array(0))
-    const listening = ref(false)
 
     const utfEncoder = new TextEncoder();
     // const utfDecoder = new TextDecoder();
@@ -27,7 +27,6 @@ export const ComService = () => {
         writer = activePort.value.writable.getWriter()
         const fixType = (typeof(msg) === 'string') ? utfEncoder.encode(msg) : msg
         const utfMsg = new Uint8Array(fixType);
-        console.log('msg type: ', typeof(msg))
         await writer.write(utfMsg);
       } catch (err) {
         console.log('Error writing to device: ', err)
@@ -38,9 +37,10 @@ export const ComService = () => {
     }
 
     const validateMessage = msg => {
+      console.log('validating message: ', msg)
       let err
-      if (msg[0] !== protocol.msgInit) {
-        err = 'Invalid init: expected 0x' + protocol.msgInit.toString(16) + ' received 0x' + msg[0]
+      if (msg[0] !== parseInt(protocol.msgInit,16)) {
+        err = 'Invalid init: expected ' + protocol.msgInit + ' received ' + msg[0]
         throw err
       }
       const len = msg.length
@@ -58,18 +58,13 @@ export const ComService = () => {
     }
   
     const readFromPortWithTimeout = async timeout => {
-      const reader = activePort.value.readable.getReader();
+      // const reader = activePort.value.readable.getReader();
   
       let res = []
-      let fin, timeExpired = false
+      let fin = false
       let msgStatus = 'unknown'
-      listening.value = true
-      
-      //Deadman timeout
-      let timer = setTimeout(()=>{
-        reader.releaseLock()
-        timeExpired = true;
-      }, timeout)
+
+      const { timer, reader } = await getReaderWithTimeout(timeout)
   
       while (!fin) {
         try {
@@ -77,7 +72,6 @@ export const ComService = () => {
           if (done) {
             reader.releaseLock();
             console.log('DONE FOUND!!')
-            fin = true
           }
           if (value) {
             res = res.concat(...value)
@@ -86,12 +80,11 @@ export const ComService = () => {
           }
         } catch (error) {
           logEvent('Error in readFromPort: ' + error)
-          logEvent('Message status: ' + msgStatus)
           reader.releaseLock()
-          listening.value = false
-          if (timeExpired) {
+          if (!listening.value) {
             logEvent('Timeout expired')
             const err = 'timeout: ' + msgStatus
+            listening.value = false
             throw err
           } else {
             throw Error('Error in readFromPortWithTimeout: ', {cause: error})

@@ -6,15 +6,24 @@ export const DeviceMessageService = () => {
     const parameterKeys = Object.keys(parameterCodes)
     const { applyRules } = Phoenix100Rules()
 
-    const buildMessageCore = program => {
-        return parameterKeys.reduce((msg, key) => {
-            msg.concat(parameterCodes[key], applyRules(key, program[key]))
-        })
+    const buildProgamCore = program => {
+        return parameterKeys.reduce(
+            (msg, key) =>  msg.concat(
+                parameterCodes[key], 
+                applyRules(key, program[key])),[])
+    }
+
+    const buildRequestCore = requstedKeys => {
+        return requstedKeys.reduce(
+            (msg, key) =>  
+                msg.concat(parameterCodes[key]), [])        
     }
 
     const commandMessageBuilder = (command, payload='') => {
         let deviceCommand = [protocol.msgInit]
-        deviceCommand = deviceCommand.concat([(payload.length*2) + 4], command)
+        const msgLength = ((payload.length*2) + 4).toString(16)
+        deviceCommand = deviceCommand
+            .concat(msgLength, command)
         if (payload) {
             deviceCommand = deviceCommand.concat(payload)
         }
@@ -22,8 +31,13 @@ export const DeviceMessageService = () => {
     }
 
     const programMessageBuilder = program => {
-        const payload = buildMessageCore(program)
+        const payload = buildProgamCore(program)
         return commandMessageBuilder(commands.write, payload)
+    }
+
+    const requestMessageBuilder = requestedKeys => {
+        const payload = buildRequestCore(requestedKeys)
+        return commandMessageBuilder(commands.read, payload)
     }
 
     // const connectDevice = commandMessageBuilder([0x36])
@@ -33,21 +47,15 @@ export const DeviceMessageService = () => {
 
     const NACK = commandMessageBuilder([protocol.NACK])
 
-    const READ = commandMessageBuilder([commands.read])
-
-    const WRITE = commandMessageBuilder([commands.write])
-
     const RESET = commandMessageBuilder([commands.reset])
 
     const PHONE = commandMessageBuilder([commands.phone])
 
-    const SETTIME = commandMessageBuilder([commands.setTime])
-
     return {
         programMessageBuilder,
+        requestMessageBuilder,
         connectDevice,
         ACK, NACK,
-        READ, WRITE,
-        RESET, PHONE, SETTIME
+        RESET, PHONE
     }
 }

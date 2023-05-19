@@ -53,7 +53,7 @@
                 "then": {
                     "postCalibrateType": "percent",
                     "postCalibrateStep": 2,
-                    "postCalibrateTrend": "Increase"
+                    "postCalibrateChange": "Increase"
                 }
             }
         }

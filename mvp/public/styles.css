@@ -29,6 +29,9 @@ tag.  This means that these variable apply to the entire document*/
     --alertSensitive: #D2E314;
     --alertInfo: #CDD2F3;
     --alertSuccess: #7ff37f;
+    --successBackground: #b1f5b196;
+
+    --modalBackground: var(var(--surface2))
   
     /* Typography - font-sizes and weights */
     /*Display*/
@@ -231,6 +234,13 @@ tag.  This means that these variable apply to the entire document*/
     padding: 8px;
   }
 
+  
+.card-area {
+  background-color: var(--neutral);
+  border-radius: 10px;
+  padding: 16px;
+}
+
 .material-icons.success {
     color: green;
 }
@@ -255,6 +265,13 @@ tag.  This means that these variable apply to the entire document*/
   gap: 16px;
 }
 
+.input-fields-rows {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: space-around;
+}
+
 .input-border {
   border: 1px solid var(--outline);
   border-radius: 10px;
@@ -266,4 +283,28 @@ tag.  This means that these variable apply to the entire document*/
   justify-content: space-between;
   gap: 8px;
   flex-wrap: nowrap;
+}
+
+.modal-screen {
+  display: block;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-container {
+  background-color: white;
+  /* background-color: var(--modalBackground); */
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid var(--outline);
+  border-radius: 20px;
+  width: 30%; 
+  height: 50%; 
+  z-index: 1;  
 }

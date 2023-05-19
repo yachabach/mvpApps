@@ -12,7 +12,7 @@
   "calibrationStart": "3.2",
   "calibrationStep": 0.5,
   "calibrateTo": "perception",
-  "postCalibrateTrend": "No Change",
+  "postCalibrateChange": "No Change",
   "postCalibrateType": "percent",
   "postCalibrateStep": 2,
   "impedanceInitiate": false,

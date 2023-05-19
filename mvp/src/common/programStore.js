@@ -1,4 +1,4 @@
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { defineStore } from 'pinia'
 import { ProgramValidator } from '@/composables/programValidator.js'
 import { defaultProgram } from '@/data/mvpConfig.json'
@@ -27,7 +27,6 @@ export const  useProgramStore = defineStore('program', () => {
 
   function loadDefaultProgram() {
     reactiveObject.program = requiredFields(defaultProgram)
-    console.log('required fields: ', reactiveObject.program)
   }
 
   function updateFileHandle(fileHandle) {

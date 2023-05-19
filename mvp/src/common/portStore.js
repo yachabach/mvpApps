@@ -8,10 +8,11 @@ export const  usePortStore = defineStore('port', () => {
   const { logEvent } = useLogStore()
 
   // logEvent('Started portStore')
-  console.log('starting portStore2')
+  console.log('starting portStore')
 
   //state
   const activePort = ref(undefined)
+  const listening = ref(false)
 
   //getters
   const browserCapable = computed(() => { return "serial" in navigator})
@@ -59,6 +60,18 @@ export const  usePortStore = defineStore('port', () => {
     }
     return res
   }
+
+  async function getReaderWithTimeout(timeout) {
+    listening.value = true
+    const reader = await getReader()
+    const timer = setTimeout(()=> {
+      listening.value = false
+      reader.releaseLock()
+    }, timeout)
+    return { timer, reader }   
+  }
+
+  const getReader = async () => await activePort.value.readable.getReader();
   
   const forgetPort = async port => {
     if (port) {
@@ -136,6 +149,8 @@ export const  usePortStore = defineStore('port', () => {
     disconnectPort,
     browserCapable,
     portAuthorized,
-    portStatus
+    portStatus,
+    getReaderWithTimeout,
+    listening
   }
 })

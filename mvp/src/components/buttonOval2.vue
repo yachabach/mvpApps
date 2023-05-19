@@ -3,9 +3,12 @@
         <button
             id="id"
             :disabled="disabled"
-            @click="handleClick"
-            :class="{ success: success}">
-            {{  success ? config.successPhrase : config.failPhrase }}
+            @click="handleClick">
+            <div class="button-label">
+                <ButtonStatus
+                    :config="config" 
+                    :success="success"/>                
+            </div>
         </button>   
         <p v-if="!success">{{ config.remedy }}</p>     
         <p v-if="success & config.guidance">{{ config.guidance }}</p>     
@@ -13,6 +16,8 @@
 </template>
 
 <script setup>
+import ButtonStatus from '@/components/statusLine.vue'
+
 const props = defineProps({
     config: {
         successPhrase: String,
@@ -29,8 +34,8 @@ const props = defineProps({
 const emit = defineEmits(['ovalClick'])
 
 const handleClick = e => {
+    // e.preventDefault()
     e.target.id = props.id
-    console.log('emitting ovalClick: ', e.target.id)
     emit('ovalClick', e.target.id )
 }
 
@@ -40,13 +45,13 @@ const handleClick = e => {
 
     button {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         align-items: center;
         box-sizing: border-box;
         border: 1px solid #79747E;
         height: 40px;
         padding: 8px;
-        width: 200px;
+        width: fit-content;
         font-size: var(--bodyFont);
         font-weight: var(--bodyWeight);
         border-radius: 20px;
@@ -63,10 +68,6 @@ const handleClick = e => {
 
     .selected {
         background-color: var(--selected-background);
-    }
-
-    .success {
-        background-color: var(--successBackground);
     }
 
     .none {

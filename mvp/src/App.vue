@@ -27,12 +27,6 @@ import { RouterView } from 'vue-router'
 
 .header {
   grid-area: header;
-  /* display: flex;
-    justify-content: space-between;
-    padding: 0px 16px;
-    gap: 16px;
-    background: transparent;
-    align-content: center; */
   }
 
   .content {

@@ -26,11 +26,15 @@ export const Phoenix100Rules = () => {
     addRule('calibrateTo', 
         makeLabelToNumericRule([['perception', 0], ['discomfort', 1]], 0))     
     addRule('postCalibrateChange', 
-        makeLabelToNumericRule([['stable', 0], ['increase', 1], ['decrease', 1]], 0))     
+        makeLabelToNumericRule([['no change', 0], ['increase', 1], ['decrease', 2]], 0))     
     addRule('impedanceInitiate', 
         makeLabelToNumericRule([['check', 1]], 0))     
     addRule('impedanceMonitor', 
         makeLabelToNumericRule([], 0))     
+    addRule('postCalibrateChange', 
+        makeLabelToNumericRule([['no change', 0], ['increase', 1], ['decrease', 2]], 0))     
+    addRule('postCalibrateType', 
+        makeLabelToNumericRule([['percent', 0]], 0))     
 
     return {
         applyRules

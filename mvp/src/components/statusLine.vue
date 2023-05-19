@@ -1,5 +1,5 @@
 <template>
-  <div v-if="success">
+  <div v-if="props.success">
     <p><span class="material-icons success">done</span>{{ config.successPhrase }}</p>
     <p></p>
   </div>

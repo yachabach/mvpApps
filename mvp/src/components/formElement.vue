@@ -5,10 +5,10 @@
         <slot />
       </div>
       <div class="button-area">
-        <button v-for="button in buttonList"
-          :key="button.id"
-          :id="button.id">
-            {{button.label}}
+        <button v-for="button in props.buttonList"
+          :key="formButtons[button].id"
+          :id="formButtons[button].id">
+            {{ formButtons[button].label }}
         </button>
       </div>
     </form>
@@ -17,11 +17,9 @@
 <script setup>
 import { formButtons } from '@/data/mvpConfig.json'
 
-const buttonList = [
-  formButtons['cancel'],
-  formButtons['saveAs'],
-  formButtons['save']
-]
+const props = defineProps([
+  'buttonList'
+])
 
 const handleSubmit = e => {
   e.preventDefault()

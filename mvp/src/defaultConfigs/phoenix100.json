@@ -32,7 +32,7 @@
         "calibrationStart": "0x50",
         "calibrationStep": "0x51",
         "calibrateTo": "0x53",
-        "postCalibrateTrend": "0x54",
+        "postCalibrateChange": "0x54",
         "postCalibrateType": "0x55",
         "postCalibrateStep": "0x56",            
         "impedanceInitiate": "0x63",

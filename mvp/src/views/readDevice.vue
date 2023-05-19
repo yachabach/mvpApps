@@ -1,23 +1,19 @@
 <template>
     <div class="canvas">
         <section class="grid-structure">
-            <header class="card-area header-area">
-                <h1>{{program.programName}}</h1>
-                <FileSelector 
-                    :fileHandle="programFileHandle" 
-                    @fileChosen="handleFileChosen"/> 
-            </header>
+
+            <div class="params card-area">
+                <DeviceManager />
+            </div>
 
             <div class="program card-area">
                 <FormElement 
                     @submit.prevent="handleFormSubmit"
-                    :buttonList="['cancel', 'saveAs', 'save']">
+                    :buttonList="['cancel', 'save']">
                     <ProgramEditForm />
                 </FormElement>
             </div>
-            <div class="device card-area">
-                <DeviceManager />
-            </div>
+
         </section>        
     </div>
 
@@ -26,7 +22,7 @@
 <script setup>
 import FormElement from '@/components/formElement.vue'
 import ProgramEditForm from '@/components/programEditFormContent.vue'
-import FileSelector from '@/components/fileSelector.vue'
+import { useRouter } from 'vue-router'
 import DeviceManager from '@/components/deviceManager.vue'
 import { useProgramStore } from '@/common/programStore.js'
 import { storeToRefs } from 'pinia'
@@ -35,7 +31,7 @@ import { ProgramFormFunctions } from '@/composables/programEditButtonFunctions.j
 const { handleSubmit } = ProgramFormFunctions();
 const { loadProgramFile } = useProgramStore();
 const { program, programFileHandle } = storeToRefs(useProgramStore());
-
+const router = useRouter()
 const handleFileChosen = async handle => {
     loadProgramFile(handle)
 }
@@ -55,26 +51,17 @@ const handleFormSubmit = async e => {
 .grid-structure {
     display: grid;
     grid-template-areas: 
-        "header header"
-        "program device";
-    grid-template-rows: 1fr 5fr;
-    grid-template-columns: 65% 35%;
+        "device program";
+    grid-template-columns: 35% 65%;
     gap: 8px;
     background-color: white;
-}
-
-.header-area {
-    grid-area: header;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 }
 
 .program {
     grid-area: program;
 }
 
-.device {
+.params {
     grid-area: device;
 }
 
