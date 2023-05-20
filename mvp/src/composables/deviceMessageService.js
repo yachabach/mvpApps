@@ -56,6 +56,11 @@ export const DeviceMessageService = () => {
         return requestedCodes.reduce((msg, code) => msg.concat([commandMessageBuilder(commands.read, [code])], ), [])
     }
 
+    //parse the response from the device
+    const parseResponse = msg => {
+        
+    }
+
     // const connectDevice = commandMessageBuilder([0x36])
     const connectDevice = commandMessageBuilder([commands.init])
 

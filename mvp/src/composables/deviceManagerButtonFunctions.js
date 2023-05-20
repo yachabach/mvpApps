@@ -6,7 +6,7 @@ import { useRouter } from 'vue-router'
 export const DeviceManagerButtonFunctions = () => {
 
     const { changeActivePort } = usePortStore()
-    const { runDialog } = DialogEngine()
+    const { runDialog, runMessageStream } = DialogEngine()
     const dms = DeviceMessageService()
     const router = useRouter()
 
@@ -19,16 +19,22 @@ export const DeviceManagerButtonFunctions = () => {
             return await runDialog(dms.connectDevice, 5000)
         },
 
-        writeButton: program => {
+        //returns true or false
+        writeButton: async program => {
             console.log('parameter message: ', dms.buildProgramMsgList(program))
-            // router.push({name: 'readDevice'})
+            return await runMessageStream(dms.buildProgramMsgList(program))
         },
 
+        //Pushes to device Program page
+        deviceLoadButton: () => router.push({name: 'readDevice'}),
+
+        //returns program object or undefined
         readButton: () => {
             console.log('Reading Program from Device')
             console.log('readMsgList: ', dms.buildReadMsgList(['frequency', 'pulseWidth']))
         },
 
+        //returns true or false
         resetButton: async () => {
             return await runDialog(dms.RESET, 5000)
         },

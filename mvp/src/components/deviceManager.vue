@@ -52,7 +52,7 @@ const buttonsDisabled = ref(false)
 const handleOvalClick = async e => {
     buttonsDisabled.value = true
     const res = await ovalButton[e.target.id](program.value)
-    console.log('Res from dialog using button: ', res)
+    console.log('Res from dialog button: ', res)
     buttonsDisabled.value = false
 }
 

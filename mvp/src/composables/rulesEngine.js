@@ -13,7 +13,6 @@ export const RulesEngine = importedRules => {
     }
 
     const applyRules = (key, value) => {
-        console.log('applying rule for key: ', key)
         const rule = rules.get(key)
         return rule ?
             rule.rules.reduce((v, r) => 

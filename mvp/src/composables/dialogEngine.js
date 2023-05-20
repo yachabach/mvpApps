@@ -6,36 +6,50 @@ export const DialogEngine = () => {
 
     const { exchangeMessages, writeToPort } = ComService()
     const { logEvent } = useLogStore()
-    const { ACK, NACK } = DeviceMessageService()
+    const { ACK, NACK, parseResponse } = DeviceMessageService()
 
-    const runDialog = async command => {
-        let res = undefined
+    const runDialog = async msg => {
         try {
-            res = await exchangeMessages(command, 5000)
+            const res = await exchangeMessages(msg, 5000)
             return res ? 
-                respondToDeviceMessage.get(res[2])() :
+                respondToDeviceMessage.get(res[2])(res) :
                 respondToDeviceMessage.get('NACK')()
         } catch (err) {
             console.log('Error in handleConnect Device: ', err)
-            respondToDeviceMessage.get('NACK')()
+            return respondToDeviceMessage.get('NACK')()
         }
     }
 
     const respondWith = async msg => {
         logEvent('responding with ' + msg)
-        await writeToPort(msg)
-        return true        
+        return await writeToPort(msg)
     }
     
     const respondToDeviceMessage = new Map(
         [
+            [0x02, () => parseResponse],
             [0x03, () => respondWith(ACK)],
-            ['NACK', () => respondWith(NACK)],
+            ['NACK', () => {
+                respondWith(NACK)
+                return false
+            }],
             [0xFF, () => logEvent('ACK received')],
             [0xF0, () => logEvent('NACK received')]
         ])
 
+    const runMessageStream = async messageStream => {
+        try {
+            return messageStream.reduce(async (dialogResult, msg) => 
+            dialogResult ? await runDialog(msg) ? true : await runDialog(msg) : false, true)
+        }catch (err) {
+            console.log('runMessageStream error: ', err)
+            logEvent('message stream failed with: ', err)
+            return false
+        }
+    }
+
     return Object.freeze({
         runDialog,
+        runMessageStream,
     })
 }

@@ -26,18 +26,21 @@ export const ComService = () => {
     }
   
     const writeToPort = async (msg) => {
-      let writer
+      let result = false
+      let writer = undefined
       try {
-        writer = activePort.value.writable.getWriter()
+        writer = await activePort.value.writable.getWriter()
         const fixType = (typeof(msg) === 'string') ? utfEncoder.encode(msg) : msg
         const utfMsg = new Uint8Array(fixType);
         await writer.write(utfMsg);
+        result = true;
       } catch (err) {
         console.log('Error writing to device: ', err)
       } finally {
         logEvent(`Wrote to COM Port: ${msg}`)
         writer.releaseLock()
       }
+      return result
     }
 
     const validateMessage = msg => {
@@ -113,7 +116,6 @@ export const ComService = () => {
       //return response or undefined
       return res
     }
-
 
     return Object.freeze({
         writeToPort,
