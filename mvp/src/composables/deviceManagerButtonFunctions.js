@@ -20,13 +20,13 @@ export const DeviceManagerButtonFunctions = () => {
         },
 
         writeButton: program => {
-            console.log('parameter message: ', dms.buildParamMsgList(program))
+            console.log('parameter message: ', dms.buildProgramMsgList(program))
             // router.push({name: 'readDevice'})
         },
 
         readButton: () => {
             console.log('Reading Program from Device')
-            return 'openReadModal'
+            console.log('readMsgList: ', dms.buildReadMsgList(['frequency', 'pulseWidth']))
         },
 
         resetButton: async () => {

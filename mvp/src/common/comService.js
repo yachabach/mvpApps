@@ -3,6 +3,8 @@ import { storeToRefs } from 'pinia';
 import { useLogStore } from './logStore'
 import { ref } from 'vue';
 
+import { DeviceMessageService } from '@/composables/deviceMessageService.js';
+
 import phoenix100 from '@/defaultConfigs/phoenix100.json';
 
 export const ComService = () => {
@@ -10,6 +12,8 @@ export const ComService = () => {
     const { getReaderWithTimeout } = usePortStore()
     const { activePort, listening } = storeToRefs(usePortStore())
     const { logEvent } = useLogStore()
+    const { checksumPassed } = DeviceMessageService();
+
     const protocol = phoenix100.protocol
 
     const receivedMsgs = ref(Array(0))
@@ -43,14 +47,8 @@ export const ComService = () => {
         err = 'Invalid init: expected ' + protocol.msgInit + ' received ' + msg[0]
         throw err
       }
-      const len = msg.length
-      if (len < 3) {
-        err = 'Message Length Error: Min: 3; Received: '+ len
-        // throw err
-        return err
-      }
-      if (((len-1)*2) != msg[1]) {
-        err = 'Message Length Error: Expected: '+ msg[1] + '; Received: '+ ((len-1)*2)
+      if (!checksumPassed(msg)) {
+        err = 'Checksum Failed'
         // throw err
         return err
       }
@@ -58,13 +56,13 @@ export const ComService = () => {
     }
   
     const readFromPortWithTimeout = async timeout => {
-      // const reader = activePort.value.readable.getReader();
   
       let res = []
       let fin = false
       let msgStatus = 'unknown'
 
-      const { timer, reader } = await getReaderWithTimeout(timeout)
+      const { deadman, reader } = await getReaderWithTimeout(timeout)
+      console.log('deadman: ', deadman)
   
       while (!fin) {
         try {
@@ -74,6 +72,8 @@ export const ComService = () => {
             console.log('DONE FOUND!!')
           }
           if (value) {
+            clearTimeout(deadman.timer)
+            deadman.timer = deadman.resetTimer(timeout)
             res = res.concat(...value)
             msgStatus = validateMessage(res)
             fin = msgStatus === 'valid'
@@ -91,7 +91,7 @@ export const ComService = () => {
           }
         }
       }
-      clearTimeout(timer)
+      clearTimeout(deadman.timer)
       listening.value = false
       reader.releaseLock();
       logEvent('Valid message received: ' + res)

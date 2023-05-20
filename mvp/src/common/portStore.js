@@ -61,14 +61,21 @@ export const  usePortStore = defineStore('port', () => {
     return res
   }
 
+  //returns a deadman object with reset timer function for long conversations
   async function getReaderWithTimeout(timeout) {
-    listening.value = true
     const reader = await getReader()
-    const timer = setTimeout(()=> {
-      listening.value = false
-      reader.releaseLock()
-    }, timeout)
-    return { timer, reader }   
+    const deadman = (() => {
+      let timer = undefined
+      const resetTimer = timeout => {
+          return setTimeout(()=> {
+          console.log('resetting timeout')
+          listening.value = false
+          reader.releaseLock()
+        }, timeout)}
+      return { timer, resetTimer }
+    })()
+    deadman.timer = deadman.resetTimer(timeout)
+    return { deadman, reader }   
   }
 
   const getReader = async () => await activePort.value.readable.getReader();

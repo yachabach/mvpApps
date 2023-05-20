@@ -6,14 +6,8 @@ export const DeviceMessageService = () => {
     const parameterKeys = Object.keys(parameterCodes)
     const { applyRules } = Phoenix100Rules()
 
-    const buildProgamCore = program => {
-        return parameterKeys.reduce(
-            (msg, key) =>  msg.concat(
-                parameterCodes[key], 
-                applyRules(key, program[key])),[])
-    }
-
-    const buildRequestCore = requstedKeys => {
+    //return array of parameter codes from array of parameter keys
+    const keysToCodes = requstedKeys => {
         return requstedKeys.reduce(
             (msg, key) =>  
                 msg.concat(parameterCodes[key]), [])        
@@ -23,30 +17,43 @@ export const DeviceMessageService = () => {
 
     const checkSum = msg => msgSum(msg) & parseInt('0xff')
 
+    const checksumPassed = msg => {
+        console.log('calculated cksum: ', checkSum(msg))
+        console.log('sent cksum: ', msg.slice(-1))
+        return checkSum(msg) == msg.slice(-1)
+    }
+
+    //Turn payload data into array of hi byte and a lo byte
+    const numToHiLoBytes = num => [
+        '0x' + ('000' + (num & '0xff00').toString(16)).slice(-4,-2), 
+        '0x' + ('0' + (num & '0xFF').toString(16)).slice(-2)
+    ]
+
+    //Convert hi/lo hex strings  into a decimal integer
+    const hiLoBytesToInt = hiLoBytes => parseInt(hiLoBytes[0]*256) + parseInt(hiLoBytes[1])
+    
+    //builds command message with or without payload data
     const commandMessageBuilder = (command, payload='') => {
-        const msgLength = ((payload.length) + 2).toString(16)
+        const msgLength = '0x' + ('0' + ((payload.length + 2).toString(16))).slice(-2)
         let deviceCommand = [protocol.msgInit].concat(msgLength, command, ...payload)
         return deviceCommand.concat('0x' + checkSum(deviceCommand).toString(16))         
     }
 
-    const makeBytes = num => [(num & '0xFF00').toString(16), (num & '0xFF').toString(16)]
-
+    //builds a parameter programming command consisting of a command + hi byte + lo byte
     const buildParameterMessage = (program, parameter) => {
-        const payload = [parameterCodes[parameter], ...makeBytes(program[parameter])]
+        const payload = [parameterCodes[parameter], ...numToHiLoBytes(applyRules(parameter, program[parameter]))]
         return commandMessageBuilder(commands.write, payload)
     }
 
-    const buildParamMsgList = program => 
-        parameterKeys.reduce((msgList, param) => msgList.concat([buildParameterMessage(program, param)]),[])
+    //Builds an array of programming command messages - one for every parameter key
+    const buildProgramMsgList = program => 
+        parameterKeys.reduce((msgList, param) => 
+            msgList.concat([buildParameterMessage(program, param)]),[])
 
-    const programMessageBuilder = program => {
-        const payload = buildProgamCore(program)
-        return commandMessageBuilder(commands.write, payload)
-    }
-
-    const requestMessageBuilder = requestedKeys => {
-        const payload = buildRequestCore(requestedKeys)
-        return commandMessageBuilder(commands.read, payload)
+    //build array of read messages  - one for every requested parameter
+    const buildReadMsgList = requestedKeys => {
+        const requestedCodes = keysToCodes(requestedKeys)
+        return requestedCodes.reduce((msg, code) => msg.concat([commandMessageBuilder(commands.read, [code])], ), [])
     }
 
     // const connectDevice = commandMessageBuilder([0x36])
@@ -61,10 +68,10 @@ export const DeviceMessageService = () => {
     const PHONE = commandMessageBuilder([commands.phone])
 
     return {
-        programMessageBuilder,
-        requestMessageBuilder,
-        buildParameterMessage,
-        buildParamMsgList,
+        buildReadMsgList,
+        buildProgramMsgList,
+        checksumPassed,
+        hiLoBytesToInt,
         connectDevice,
         ACK, NACK,
         RESET, PHONE
