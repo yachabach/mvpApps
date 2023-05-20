@@ -10,13 +10,14 @@ export const DialogEngine = () => {
 
     const runDialog = async msg => {
         try {
+            console.log('runDialog message: ', msg)
             const res = await exchangeMessages(msg, 5000)
             return res ? 
-                respondToDeviceMessage.get(res[2])(res) :
-                respondToDeviceMessage.get('NACK')()
+                await respondToDeviceMessage.get(res[2])(res) :
+                await respondToDeviceMessage.get('NACK')()
         } catch (err) {
             console.log('Error in handleConnect Device: ', err)
-            return respondToDeviceMessage.get('NACK')()
+            return await respondToDeviceMessage.get('NACK')()
         }
     }
 
@@ -28,9 +29,9 @@ export const DialogEngine = () => {
     const respondToDeviceMessage = new Map(
         [
             [0x02, () => parseResponse],
-            [0x03, () => respondWith(ACK)],
-            ['NACK', () => {
-                respondWith(NACK)
+            [0x03, async () => await respondWith(ACK)],
+            ['NACK', async () => {
+                await respondWith(NACK)
                 return false
             }],
             [0xFF, () => logEvent('ACK received')],
@@ -39,9 +40,22 @@ export const DialogEngine = () => {
 
     const runMessageStream = async messageStream => {
         try {
-            return messageStream.reduce(async (dialogResult, msg) => 
-            dialogResult ? await runDialog(msg) ? true : await runDialog(msg) : false, true)
-        }catch (err) {
+            return await messageStream.reduce(async (dialogResult, msg) =>{
+            //     let flag = await dialogResult
+            //     console.log('inside reduce with message: ', msg) 
+            //     if (flag) {
+            //         flag = await runDialog(msg)
+            //         console.log('flag after runDialog: ', flag)
+            //         if (flag) {
+            //             return true
+            //         } else {
+            //             return await runDialog(msg)
+            //         }
+            //     }
+            // }
+            console.log('inside reduce with message: ', msg) 
+            await dialogResult ? await runDialog(msg) ? true : await runDialog(msg) : false}, true)
+        } catch (err) {
             console.log('runMessageStream error: ', err)
             logEvent('message stream failed with: ', err)
             return false

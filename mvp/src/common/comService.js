@@ -29,6 +29,7 @@ export const ComService = () => {
       let result = false
       let writer = undefined
       try {
+        console.log('getting a writer')
         writer = await activePort.value.writable.getWriter()
         const fixType = (typeof(msg) === 'string') ? utfEncoder.encode(msg) : msg
         const utfMsg = new Uint8Array(fixType);
@@ -38,7 +39,9 @@ export const ComService = () => {
         console.log('Error writing to device: ', err)
       } finally {
         logEvent(`Wrote to COM Port: ${msg}`)
-        writer.releaseLock()
+        console.log('releasing writer lock')
+        await writer.releaseLock()
+        console.log('writer is: ', writer)
       }
       return result
     }
@@ -104,7 +107,8 @@ export const ComService = () => {
     const exchangeMessages = async (sendMsg, timeout) => {
     
       //send message
-      await writeToPort(sendMsg)
+      const writeResult = await writeToPort(sendMsg)
+      console.log("writeResult: ", writeResult)
       
       //listen for response until timeout
       let res = undefined

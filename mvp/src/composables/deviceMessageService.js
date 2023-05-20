@@ -15,7 +15,7 @@ export const DeviceMessageService = () => {
 
     const msgSum = msg => msg.reduce((s, m) => s + parseInt(m),0)
 
-    const checkSum = msg => msgSum(msg) & parseInt('0xff')
+    const checkSum = msg => msgSum(msg.slice(0, msg.length-1)) & parseInt('0xff')
 
     const checksumPassed = msg => {
         console.log('calculated cksum: ', checkSum(msg))
