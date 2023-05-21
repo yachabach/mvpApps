@@ -29,9 +29,9 @@ export const DeviceManagerButtonFunctions = () => {
         deviceLoadButton: () => router.push({name: 'readDevice'}),
 
         //returns program object or undefined
-        readButton: () => {
-            console.log('Reading Program from Device')
-            console.log('readMsgList: ', dms.buildReadMsgList(['frequency', 'pulseWidth']))
+        readButton: parameterList => {
+            console.log('Reading Program from Device using: ', parameterList)
+            console.log('readMsgList: ', dms.buildReadMsgList(parameterList))
         },
 
         //returns true or false
