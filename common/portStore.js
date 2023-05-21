@@ -33,8 +33,6 @@ export const  usePortStore = defineStore('port', () => {
       alert('No COM port connected.  \nClick "Connect Port" to connect a COM Port.')
     } else {
       await openActivePort()
-      // activeReader.value = await openReader();
-      // activeWriter.value = await openWriter();
     }
   }
 
@@ -111,13 +109,6 @@ export const  usePortStore = defineStore('port', () => {
     }
   }
 
-  async function openReader () {
-    if (! await isReaderLocked()) {
-      const reader = await activePort.value.readable.getReader()
-      return reader
-    }
-  }
-
   async function closeReader() {
     if (await isReaderLocked()) {
       await activeReader.value.releaseLock();
@@ -161,7 +152,7 @@ export const  usePortStore = defineStore('port', () => {
     activePort, 
     activeReader,
     activeWriter,
-    openReader, closeReader,
+    closeReader,
     openWriter, closeWriter,
     changeActivePort, 
     initializePort, 

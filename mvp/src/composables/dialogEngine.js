@@ -40,21 +40,8 @@ export const DialogEngine = () => {
 
     const runMessageStream = async messageStream => {
         try {
-            return await messageStream.reduce(async (dialogResult, msg) =>{
-            //     let flag = await dialogResult
-            //     console.log('inside reduce with message: ', msg) 
-            //     if (flag) {
-            //         flag = await runDialog(msg)
-            //         console.log('flag after runDialog: ', flag)
-            //         if (flag) {
-            //             return true
-            //         } else {
-            //             return await runDialog(msg)
-            //         }
-            //     }
-            // }
-            console.log('inside reduce with message: ', msg) 
-            await dialogResult ? await runDialog(msg) ? true : await runDialog(msg) : false}, true)
+            return await messageStream.reduce(async (dialogResult, msg) =>
+                await dialogResult ? await runDialog(msg) ? true : await runDialog(msg) : false, true)
         } catch (err) {
             console.log('runMessageStream error: ', err)
             logEvent('message stream failed with: ', err)

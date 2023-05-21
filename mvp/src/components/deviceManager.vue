@@ -40,10 +40,6 @@ const { logList } = storeToRefs(useLogStore())
 const { program } = storeToRefs(useProgramStore())
 const { ovalButton } = DeviceManagerButtonFunctions()
 
-const selectedParameters = ref([Object.keys(phoenix100.parameterCodes)])
-
-
-const showReadDialog = ref(false)
 
 if (portAuthorized) initializePort()
 

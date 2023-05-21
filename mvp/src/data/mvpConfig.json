@@ -138,6 +138,11 @@
         "failPhrase": "",
         "remedy": ""        
     },    
+    "deviceLoadButton": {
+        "successPhrase": "View device load",
+        "failPhrase": "",
+        "remedy": ""        
+    },    
     "readButton": {
         "successPhrase": "Read from device",
         "failPhrase": "",

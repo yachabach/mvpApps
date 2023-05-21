@@ -18,8 +18,8 @@ export const  useLogStore = defineStore('log', () => {
 
   //actions
   function logEvent(event, result='none'){
-    console.log('logging event: ', event)
     addLogEntry(log(event, result))
+    return true
   }
 
   //utilities

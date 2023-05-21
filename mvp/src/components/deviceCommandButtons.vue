@@ -15,9 +15,9 @@
             :config="writeButton" 
             :success="true"/>
         <ButtonOval 
-            id="readButton"
+            id="deviceLoadButton"
             :disabled="!!(!portAuthorized | buttonsDisabled)"
-            :config="readButton" 
+            :config="deviceLoadButton" 
             :success="true"/>
         <ButtonOval 
             id="resetButton"
@@ -34,7 +34,7 @@
 
 <script setup>
 import ButtonOval from '@/components/buttonOval.vue'
-import {portAuthButton, connectButton, writeButton, readButton, resetButton, phoneButton} from '@/data/mvpConfig.json'
+import {portAuthButton, connectButton, writeButton, deviceLoadButton, resetButton, phoneButton} from '@/data/mvpConfig.json'
 
 const props = defineProps({
     buttonsDisabled: Boolean,

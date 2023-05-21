@@ -3,7 +3,7 @@
         <section class="grid-structure">
 
             <div class="params card-area">
-                <DeviceManager />
+                <ChooseParams />
             </div>
 
             <div class="program card-area">
@@ -23,7 +23,7 @@
 import FormElement from '@/components/formElement.vue'
 import ProgramEditForm from '@/components/deviceProgramFormContent.vue'
 import { useRouter } from 'vue-router'
-import DeviceManager from '@/components/deviceManager.vue'
+import ChooseParams from '@/components/chooseParams.vue'
 import { useProgramStore } from '@/common/programStore.js'
 import { storeToRefs } from 'pinia'
 import { ProgramFormFunctions } from '@/composables/programEditButtonFunctions.js'

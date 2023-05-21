@@ -58,6 +58,7 @@ export const DeviceMessageService = () => {
 
     //parse the response from the device
     const parseResponse = msg => {
+        console.log('Parsing response from device: ', msg)
         
     }
 
@@ -77,6 +78,7 @@ export const DeviceMessageService = () => {
         buildProgramMsgList,
         checksumPassed,
         hiLoBytesToInt,
+        parseResponse,
         connectDevice,
         ACK, NACK,
         RESET, PHONE

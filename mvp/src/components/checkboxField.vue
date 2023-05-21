@@ -5,6 +5,7 @@
             :checked="modelValue" 
             @input="handleInput"
             :class="classList"
+            :value="value"
         />
         <label :for="id">{{ labelEnd }}</label>
         <p v-if="error" class="validation-error">{{ error }}</p>
@@ -21,6 +22,7 @@ const props = defineProps([
     'error',
     'hint',
     'classList',
+    'value',
 ]);
 
 const emit = defineEmits(['update:modelValue'])
