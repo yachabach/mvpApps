@@ -29,7 +29,7 @@ label {
 p, pre {
     font-weight: 600;
     white-space: pre-wrap;
-};
+}
 
 
 </style>

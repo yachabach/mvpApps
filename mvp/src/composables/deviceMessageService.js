@@ -1,16 +1,26 @@
 import { parameterCodes, protocol, commands } from '@/defaultConfigs/phoenix100.json'
 import { Phoenix100Rules } from '@/programRules/phoenix100Rules'
+import { useLogStore } from '@/common/logStore.js'
+import { useProgramStore } from '@/common/programStore.js'
+import { storeToRefs } from 'pinia'
 
 export const DeviceMessageService = () => {
 
     const parameterKeys = Object.keys(parameterCodes)
     const { applyRules } = Phoenix100Rules()
+    const { program } = storeToRefs(useProgramStore())
+    const { logEvent } = useLogStore()
 
     //return array of parameter codes from array of parameter keys
     //removes keys that don't have a code
     const keysToCodes = requstedKeys => 
         requstedKeys.reduce((msg, key) => parameterCodes[key] ?
-                msg.concat(parameterCodes[key]) : msg, [])        
+                msg.concat(parameterCodes[key]) : msg, [])
+                
+    const swapKeysToValues = obj => Object.keys(obj).reduce((newObj, key) => {
+        newObj[parseInt(obj[key])] = key
+        return newObj
+    }, {})
 
     const msgSum = msg => msg.reduce((s, m) => s + parseInt(m),0)
 
@@ -56,19 +66,25 @@ export const DeviceMessageService = () => {
         return requestedCodes.reduce((msg, code) => msg.concat([commandMessageBuilder(commands.read, [code])]), [])
     }
 
-    // console.log('Read response - frequency: ', commandMessageBuilder('0x02', ['0x47', '0x00', '0x1A']))
-    // console.log('Read response - pulseWidth: ', commandMessageBuilder('0x02', ['0x48', '0x00', '0x04']))
+    // console.log('Read response - frequency: ', commandMessageBuilder('0x02', ['0x47', '0x01', '0x1A']))
+    // console.log('Read response - pulseWidth: ', commandMessageBuilder('0x02', ['0x48', '0x00', '0x0a']))
     // console.log('Read response - waveform: ', commandMessageBuilder('0x02', ['0x49', '0x00', '0x01']))
 
     //parse the response from the device
     //0x37 len 0x02 code hi lo CS
-    //Frequency: ['0x37', '0x05', '0x02', '0x47', '0x00', '0x1A', '0x9f']
-    //Pulsewidth: ['0x37', '0x05', '0x02', '0x48', '0x00', '0x04', '0x8a']
-    //Waveform: ['0x37', '0x05', '0x02', '0x49', '0x00', '0x01', '0x88']
+    //Request frequency: ['0x37', '0x03', '0x01', '0x47', '0x82']
+    //Request pulseWIdth: ['0x37', '0x03', '0x01', '0x48', '0x83']
+    //Request waveform: ['0x37', '0x03', '0x01', '0x49', '0x84']
+    //respond Frequency: ['0x37', '0x05', '0x02', '0x47', '0x01', '0x1A', '0xa0'] : 0x37 0x05 0x02 0x47 0x00 0x1A 0xa0
+    //respond Pulsewidth: ['0x37', '0x05', '0x02', '0x48', '0x00', '0x0a', '0x90'] : 0x37 0x05 0x02 0x48 0x00 0x04 0x90
+    //respond Waveform: ['0x37', '0x05', '0x02', '0x49', '0x00', '0x01', '0x88'] : 0x37 0x05 0x02 0x49 0x00 0x01 0x88
     const parseResponse = msg => {
         console.log('Parsing response from device: ', msg)
+        const codeKeys = swapKeysToValues(parameterCodes)
+        console.log('codeKeys: ', codeKeys, ' msg[3]: ', msg[3])
+        console.log('setting: ', codeKeys[msg[3]], ' to: ', hiLoBytesToInt(msg.slice(-3, -1)))
+        logEvent([codeKeys[msg[3]]] + ' = ' + hiLoBytesToInt(msg.slice(-3, -1)))
         return true
-        
     }
 
     // const connectDevice = commandMessageBuilder([0x36])

@@ -40,6 +40,7 @@ export const DialogEngine = () => {
 
     const runMessageStream = async messageStream => {
         try {
+            console.log('message stream: ', messageStream)
             return await messageStream.reduce(async (dialogResult, msg) =>
                 await dialogResult ? await runDialog(msg) ? true : await runDialog(msg) : false, true)
         } catch (err) {

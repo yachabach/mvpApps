@@ -1,35 +1,20 @@
 {
-  "programName": "Default Program",
-  "contact": {
-    "name": "Evren Default Program",
-    "phone": ""
-  },
+  "programName": "Another Save",
+  "adherenceContact": "Nobody",
+  "frequency": 50,
+  "pulseWidth": 200,
+  "waveform": "monophasic",
   "outletPort": "both",
   "programLength": "00:15:00",
-  "stimulation": {
-    "waveform": "monophasic",
-    "amplitudeRange": {
-      "currentLower": 0,
-      "currentUpper": 10
-    },
-    "pulseWidth": 200,
-    "frequency": 50
-  },
-  "impedance": {
-    "impedanceInitiate": false,
-    "impedanceMonitor": false
-  },
-  "calibration": {
-    "calibrationFrequency": "once",
-    "calibrationStart": 2,
-    "calibrationStep": 0.5,
-    "calibrationLimit": {
-      "calibrateTo": "perception",
-      "then": {
-        "postCalibrateType": "percent",
-        "postCalibrateStep": 2,
-        "postCalibrateChange": "Increase"
-      }
-    }
-  }
+  "currentLower": 0,
+  "currentUpper": 10,
+  "calibrationFrequency": "once",
+  "calibrationStart": 2,
+  "calibrationStep": 0.5,
+  "calibrateTo": "discomfort",
+  "postCalibrateChange": "Increase",
+  "postCalibrateType": "percent",
+  "postCalibrateStep": 2,
+  "impedanceInitiate": true,
+  "impedanceMonitor": false
 }

@@ -38,10 +38,9 @@ const { logList } = storeToRefs(useLogStore())
 const { program } = storeToRefs(useProgramStore())
 const { ovalButton } = DeviceManagerButtonFunctions()
 
-
-
 const buttonsDisabled = ref(false)
 
+//TODO: Refactor - this pattern produces hidden side-effects on program store
 const handleOvalClick = async e => {
     buttonsDisabled.value = true
     const res = await ovalButton[e.target.id](program.value)

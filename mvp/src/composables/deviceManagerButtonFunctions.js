@@ -2,11 +2,15 @@ import { DeviceMessageService } from "@/composables/deviceMessageService"
 import { DialogEngine } from "@/composables/dialogEngine"
 import { usePortStore } from '@/common/portStore.js'
 import { useRouter } from 'vue-router'
+import { useProgramStore } from "@/common/programStore"
+import { storeToRefs } from "pinia"
 
 export const DeviceManagerButtonFunctions = () => {
 
     const { changeActivePort } = usePortStore()
     const { runDialog, runMessageStream } = DialogEngine()
+    const { updateFileHandle, clearProgram, loadDefaultProgram } = useProgramStore()
+    const { program } = storeToRefs(useProgramStore())
     const dms = DeviceMessageService()
     const router = useRouter()
 
@@ -29,11 +33,9 @@ export const DeviceManagerButtonFunctions = () => {
         deviceLoadButton: () => router.push({name: 'readDevice'}),
 
         //returns program object or undefined
-        readButton: async program => {
-            const programKeys = Object.keys(program)
-            console.log('Reading Program from Device using: ', programKeys)
-            console.log('readMsgList: ', dms.buildReadMsgList(programKeys))
-            return await runMessageStream(dms.buildReadMsgList(programKeys))
+        readButton: async prog => {
+            const programKeys = Object.keys(prog)
+            await runMessageStream(dms.buildReadMsgList(programKeys))
         },
 
         //returns true or false

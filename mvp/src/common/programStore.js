@@ -36,6 +36,10 @@ export const  useProgramStore = defineStore('program', () => {
     reactiveObject.handle = fileHandle
   }
 
+  function clearProgram(program) {
+    Object.keys(program).forEach(key => program[key] = '')
+  }
+
   //setup
   if (program.value) {
     console.log('Program already populated...not loading program')
@@ -52,5 +56,6 @@ export const  useProgramStore = defineStore('program', () => {
     loadProgramObject,
     loadDefaultProgram,
     loadProgramFile,
+    clearProgram
   }
 })

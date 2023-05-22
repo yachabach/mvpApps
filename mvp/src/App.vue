@@ -4,6 +4,8 @@ import { RouterView } from 'vue-router'
 import { usePortStore } from '@/common/portStore';
 import { onBeforeUnmount } from 'vue';
 
+console.log('Starting App')
+
 const { closeActivePort } = usePortStore()
 
 onBeforeUnmount(() => closeActivePort())
