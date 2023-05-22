@@ -16,7 +16,7 @@ export const FileFunctions = () => {
     };    
 
     const chooseFileWithPicker = async () => {
-        // Open file picker and destructure the result the first handle
+        // Open file picker and destructure the result to the first handle
         const [fileHandle] = await window.showOpenFilePicker(pickerOpts);
     
         // get file contents
@@ -30,11 +30,8 @@ export const FileFunctions = () => {
 
     // fileHandle is an instance of FileSystemFileHandle..
     async function writeFile(fileHandle, contents) {
-        // Create a FileSystemWritableFileStream to write to.
         const writable = await fileHandle.createWritable();
-        // Write the contents of the file to the stream.
         await writable.write(contents);
-        // Close the file and write the contents to disk.
         await writable.close();
     }
 

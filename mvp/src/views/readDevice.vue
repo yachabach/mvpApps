@@ -22,19 +22,13 @@
 <script setup>
 import FormElement from '@/components/formElement.vue'
 import ProgramEditForm from '@/components/deviceProgramFormContent.vue'
-import { useRouter } from 'vue-router'
 import ChooseParams from '@/components/chooseParams.vue'
-import { useProgramStore } from '@/common/programStore.js'
-import { storeToRefs } from 'pinia'
 import { ProgramFormFunctions } from '@/composables/programEditButtonFunctions.js'
 
+console.log('starting readDevice.vue')
+
 const { handleSubmit } = ProgramFormFunctions();
-const { loadProgramFile } = useProgramStore();
-const { program, programFileHandle } = storeToRefs(useProgramStore());
-const router = useRouter()
-const handleFileChosen = async handle => {
-    loadProgramFile(handle)
-}
+
 
 const handleFormSubmit = async e => {
     await handleSubmit[e.submitter.id]()

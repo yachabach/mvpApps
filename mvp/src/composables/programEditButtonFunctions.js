@@ -1,21 +1,25 @@
+/**TODO
+ * Refactor: These functions have multiple dependencies and side-effects
+ */
+
 import { FileFunctions } from "./fileFunctions"
 import { useProgramStore } from '@/common/programStore.js'
 import { useRouter } from "vue-router";
-// import { storeToRefs } from "pinia";
 
 export const ProgramFormFunctions = () => {
 
+    console.log('initializing program form functions (save/saveAs/cancel)')
+
     const { getNewFileHandle, writeFile } = FileFunctions();
-    // const { program, programFileHandle } = storeToRefs(useProgramStore())
-    const { updateFileHandle, loadDefaultProgram, loadProgramFile } = useProgramStore();
+    const { updateFileHandle, loadProgramObject, loadProgramFile } = useProgramStore();
     const router = useRouter()
 
     const handleSubmit = {
         saveAs: async (program, fileHandle) => {
             fileHandle = await getNewFileHandle()
-            await writeFile(fileHandle, JSON.stringify(program.value, null, 2))
+            await writeFile(fileHandle, JSON.stringify(program, null, 2))
             updateFileHandle(fileHandle)
-            return undefined
+            return true
         },
 
         save: async (program, fileHandle) => {
@@ -24,19 +28,18 @@ export const ProgramFormFunctions = () => {
             } else {
                 handleSubmit['saveAs'](program, fileHandle)
             }
-            return undefined
+            return true
         },
 
         cancel: async (program, fileHandle) => {
-            console.log('path: ', router.currentRoute.value.name)
             if (router.currentRoute.value.name === 'readDevice') {
                 router.push({path: '/'})
             } else if (confirm('Lose changes to this program?')) {
                 fileHandle.name ? 
                     await loadProgramFile(fileHandle) :
-                    loadDefaultProgram()                
+                    loadProgramObject()                
             }
-            return undefined
+            return true
         },
     }
 

@@ -100,21 +100,22 @@ export const  usePortStore = defineStore('port', () => {
   }
   
   const openActivePort = async () => {
-    try {
-      await activePort.value.open(config.comProtocol)
-    }catch (err) {
-      console.log('Error in portStore opening active port: ', err)
-    }
-  }
-
-  const disconnectPort = async () => {
-    await forgetPort(activePort.value)
-    await initializePort()
+    if (!activePort.value.readable) {
+      try {
+        await activePort.value.open(config.comProtocol)
+      }catch (err) {
+        console.log('Error in portStore opening active port: ', err)
+      }      
+    } else {
+      console.log('Active port is already open')
+    } 
   }
 
   const closeActivePort = async () => {
+    console.log('Closing active Port.')
     try {
       await activePort.value.close()
+      console.log('Serial port closed promise resolved')
     } catch (err) {
       console.log('Error closing port in portStore.js')
     }
@@ -152,7 +153,6 @@ export const  usePortStore = defineStore('port', () => {
     changeActivePort, 
     initializePort, 
     activePortSignals,
-    disconnectPort,
     browserCapable,
     portAuthorized,
     portStatus,

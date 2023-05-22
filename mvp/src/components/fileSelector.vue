@@ -27,7 +27,7 @@ const handleChoose = async () => {
     if (fileHandle) {emit('fileChosen', fileHandle)}
 };
 
-const currentFile = computed(() => props.fileHandle.name ? props.fileHandle.name : 'No file selected')
+const currentFile = computed(() => props.fileHandle ? props.fileHandle.name : 'No file selected')
 
 </script>
 

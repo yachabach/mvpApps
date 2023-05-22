@@ -49,7 +49,7 @@ import { DeviceManagerButtonFunctions } from '@/composables/deviceManagerButtonF
 import { usePortStore } from '@/common/portStore.js'
 import  { useLogStore } from '@/common/logStore.js'
 import { storeToRefs } from 'pinia'
-import { onUnmounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, onUnmounted, ref } from 'vue'
 
 import phoenix100 from '@/defaultConfigs/phoenix100.json'
 import { connectButton, readButton } from '@/data/mvpConfig.json'
@@ -57,12 +57,10 @@ import { connectButton, readButton } from '@/data/mvpConfig.json'
 const parameterKeys = Object.keys(phoenix100.parameterCodes)
 const selectedParameters = ref(parameterKeys)
 
-const { initializePort, closeActivePort } = usePortStore()
+const { initializePort } = usePortStore()
 const { portAuthorized } = storeToRefs(usePortStore())
 const { logList } = storeToRefs(useLogStore())
 const { ovalButton } = DeviceManagerButtonFunctions()
-
-if (portAuthorized) initializePort()
 
 const buttonsDisabled = ref(false)
 
@@ -73,7 +71,7 @@ const handleOvalClick = async e => {
     buttonsDisabled.value = false
 }
 
-onUnmounted(()=>closeActivePort())
+onMounted(async () => await initializePort()) 
 
 </script>
 

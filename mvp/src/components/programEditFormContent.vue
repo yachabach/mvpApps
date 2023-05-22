@@ -138,6 +138,7 @@ import InputRange from '@/components/inputRange-v.vue'
 import { useProgramStore } from '@/common/programStore.js'
 import { storeToRefs } from 'pinia'
 
+console.log('starting programEditFormContent.vue')
 const { program } = storeToRefs(useProgramStore())
 
 import { 

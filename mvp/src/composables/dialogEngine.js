@@ -28,7 +28,7 @@ export const DialogEngine = () => {
     
     const respondToDeviceMessage = new Map(
         [
-            [0x02, () => parseResponse],
+            [0x02, msg => parseResponse(msg)],
             [0x03, async () => await respondWith(ACK)],
             ['NACK', async () => {
                 await respondWith(NACK)

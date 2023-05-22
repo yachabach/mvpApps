@@ -29,9 +29,11 @@ export const DeviceManagerButtonFunctions = () => {
         deviceLoadButton: () => router.push({name: 'readDevice'}),
 
         //returns program object or undefined
-        readButton: parameterList => {
-            console.log('Reading Program from Device using: ', parameterList)
-            console.log('readMsgList: ', dms.buildReadMsgList(parameterList))
+        readButton: async program => {
+            const programKeys = Object.keys(program)
+            console.log('Reading Program from Device using: ', programKeys)
+            console.log('readMsgList: ', dms.buildReadMsgList(programKeys))
+            return await runMessageStream(dms.buildReadMsgList(programKeys))
         },
 
         //returns true or false

@@ -1,6 +1,12 @@
 <script setup>
 import Header from '@/components/productHeader2.vue'
 import { RouterView } from 'vue-router'
+import { usePortStore } from '@/common/portStore';
+import { onBeforeUnmount } from 'vue';
+
+const { closeActivePort } = usePortStore()
+
+onBeforeUnmount(() => closeActivePort())
 </script>
 
 <template>

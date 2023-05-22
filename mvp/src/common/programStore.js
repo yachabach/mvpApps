@@ -1,4 +1,4 @@
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive } from 'vue'
 import { defineStore } from 'pinia'
 import { ProgramValidator } from '@/composables/programValidator.js'
 import { defaultProgram } from '@/data/mvpConfig.json'
@@ -9,8 +9,8 @@ export const  useProgramStore = defineStore('program', () => {
 
   //state
   const reactiveObject = reactive({
-    program: {},
-    handle: {}
+    program: undefined,
+    handle: undefined
   })
 
   //getters
@@ -25,21 +25,31 @@ export const  useProgramStore = defineStore('program', () => {
     updateFileHandle(fileHandle)
   }
 
-  function loadDefaultProgram() {
-    reactiveObject.program = flattenProgram(defaultProgram)
+  function loadProgramObject(programObject) {
+    console.log('Loading program object: ', programObject)
+    reactiveObject.program = flattenProgram(programObject)
   }
+
+  function loadDefaultProgram() { loadProgramObject(defaultProgram)}
 
   function updateFileHandle(fileHandle) {
     reactiveObject.handle = fileHandle
   }
 
   //setup
-  loadDefaultProgram()
+  if (program.value) {
+    console.log('Program already populated...not loading program')
+  } else {
+    console.log('loading default program')
+    loadProgramObject(defaultProgram)
+  }
+    
 
   return { 
     program,
     programFileHandle,
     updateFileHandle,
+    loadProgramObject,
     loadDefaultProgram,
     loadProgramFile,
   }

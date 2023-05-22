@@ -7,20 +7,20 @@ export const DeviceMessageService = () => {
     const { applyRules } = Phoenix100Rules()
 
     //return array of parameter codes from array of parameter keys
-    const keysToCodes = requstedKeys => {
-        return requstedKeys.reduce(
-            (msg, key) =>  
-                msg.concat(parameterCodes[key]), [])        
-    }
+    //removes keys that don't have a code
+    const keysToCodes = requstedKeys => 
+        requstedKeys.reduce((msg, key) => parameterCodes[key] ?
+                msg.concat(parameterCodes[key]) : msg, [])        
 
     const msgSum = msg => msg.reduce((s, m) => s + parseInt(m),0)
 
-    const checkSum = msg => msgSum(msg.slice(0, msg.length-1)) & parseInt('0xff')
+    const checkSum = msg => msgSum(msg.slice(0, msg.length)) & parseInt('0xff')
 
     const checksumPassed = msg => {
-        console.log('calculated cksum: ', checkSum(msg))
+        console.log('calculated cksum: ', checkSum(msg.slice(0, msg.length-1)))
         console.log('sent cksum: ', msg.slice(-1))
-        return checkSum(msg) == msg.slice(-1)
+        console.log('result: ', checkSum(msg.slice(0, msg.length-1)) == msg.slice(-1))
+        return checkSum(msg.slice(0, msg.length-1)) == msg.slice(-1)
     }
 
     //Turn payload data into array of hi byte and a lo byte
@@ -53,12 +53,21 @@ export const DeviceMessageService = () => {
     //build array of read messages  - one for every requested parameter
     const buildReadMsgList = requestedKeys => {
         const requestedCodes = keysToCodes(requestedKeys)
-        return requestedCodes.reduce((msg, code) => msg.concat([commandMessageBuilder(commands.read, [code])], ), [])
+        return requestedCodes.reduce((msg, code) => msg.concat([commandMessageBuilder(commands.read, [code])]), [])
     }
 
+    // console.log('Read response - frequency: ', commandMessageBuilder('0x02', ['0x47', '0x00', '0x1A']))
+    // console.log('Read response - pulseWidth: ', commandMessageBuilder('0x02', ['0x48', '0x00', '0x04']))
+    // console.log('Read response - waveform: ', commandMessageBuilder('0x02', ['0x49', '0x00', '0x01']))
+
     //parse the response from the device
+    //0x37 len 0x02 code hi lo CS
+    //Frequency: ['0x37', '0x05', '0x02', '0x47', '0x00', '0x1A', '0x9f']
+    //Pulsewidth: ['0x37', '0x05', '0x02', '0x48', '0x00', '0x04', '0x8a']
+    //Waveform: ['0x37', '0x05', '0x02', '0x49', '0x00', '0x01', '0x88']
     const parseResponse = msg => {
         console.log('Parsing response from device: ', msg)
+        return true
         
     }
 

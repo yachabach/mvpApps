@@ -36,9 +36,8 @@ const { handleSubmit } = ProgramFormFunctions();
 const { loadProgramFile } = useProgramStore();
 const { program, programFileHandle } = storeToRefs(useProgramStore());
 
-const handleFileChosen = async handle => {
-    loadProgramFile(handle)
-}
+//TODO: Refactor - no return value and has side-effects
+const handleFileChosen = async handle => await loadProgramFile(handle)
 
 const handleFormSubmit = async e => {
     await handleSubmit[e.submitter.id](program.value, programFileHandle.value)
