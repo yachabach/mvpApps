@@ -14,7 +14,7 @@ export const ComService = () => {
     const { logEvent } = useLogStore()
     const { checksumPassed } = DeviceMessageService();
 
-    const protocol = phoenix100.protocol
+    const msgInit = parseInt(phoenix100.protocol.msgInit, 16)
 
     const receivedMsgs = ref(Array(0))
 
@@ -29,19 +29,17 @@ export const ComService = () => {
       let result = false
       let writer = undefined
       try {
-        console.log('getting a writer')
         writer = await activePort.value.writable.getWriter()
         const fixType = (typeof(msg) === 'string') ? utfEncoder.encode(msg) : msg
         const utfMsg = new Uint8Array(fixType);
-        await writer.write(utfMsg);
+        const temp = await writer.write(utfMsg);
+        console.log('temp from writeToPort: ', temp)
         result = true;
       } catch (err) {
-        console.log('Error writing to device: ', err)
+        logEvent('Error writing to device: ', err)
       } finally {
         logEvent(`Wrote to COM Port: ${msg}`)
-        console.log('releasing writer lock')
         await writer.releaseLock()
-        console.log('writer is: ', writer)
       }
       return result
     }
@@ -49,8 +47,8 @@ export const ComService = () => {
     const validateMessage = msg => {
       console.log('validating message: ', msg)
       let err
-      if (msg[0] !== parseInt(protocol.msgInit,16)) {
-        err = 'Invalid init: expected ' + protocol.msgInit + ' received ' + msg[0]
+      if (msg[0] !== msgInit) {
+        err = 'Invalid init: expected ' + msgInit + ' received ' + msg[0]
         throw err
       }
       if (!checksumPassed(msg)) {
@@ -60,10 +58,33 @@ export const ComService = () => {
       }
       return 'valid'
     }
+
+    const validateStream = stream => {
+      console.log('validating stream with stream[0]: ', stream[0])
+      if (stream[0] != msgInit) {
+        logEvent('Invalid start character - discarding data stream')
+        console.log('returning empty array')
+        return []
+      } else return stream
+    }
+
+    const parseMsg = msg => checksumPassed(msg) ? {code: msg[2], payload: msg.split(3)} : undefined
+
+    const pullMessagesFrom = (list, stream) => {
+      const msgEnd = parseInt(stream[1],16)+2
+      const msgStream = [...validateStream(stream)]
+      if (isNaN(msgEnd) || msgStream.length < msgEnd) {
+        return {msgList: list, msgStream: msgStream}
+      } else {
+        const newList = list.concat([msgStream.slice(0, msgEnd)])
+        return pullMessagesFrom(newList, msgStream.slice(msgEnd))
+      }
+    }
   
     const readFromPortWithTimeout = async timeout => {
   
-      let res = []
+      let msgStream = []
+      let msgList = []
       let fin = false
       let msgStatus = 'unknown'
 
@@ -74,25 +95,29 @@ export const ComService = () => {
         try {
           const { value, done } = await reader.read();
           if (done) {
-            reader.releaseLock();
+            fin = true
+            // reader.releaseLock();
             console.log('DONE FOUND!!')
           }
           if (value) {
-            clearTimeout(deadman.timer)
-            deadman.timer = deadman.resetTimer(timeout)
-            res = res.concat(...value)
-            msgStatus = validateMessage(res)
-            fin = msgStatus === 'valid'
+            clearTimeout(deadman.timer);
+            msgStream = msgStream.concat(...value);
+            // msgStream = [...validateStream(msgStream)]
+            // {msgStream, msgList} = pullMessagesFrom(msgStream)
+            // msgStatus = validateMessage(msgStream)
+            ({msgList, msgStream} = pullMessagesFrom(msgList, msgStream));
+            fin = !msgStream.length;
+            console.log({msgList,  msgStream})
+            deadman.timer = deadman.resetTimer(timeout);
           }
         } catch (error) {
-          logEvent('Error in readFromPort: ' + error)
-          reader.releaseLock()
           if (!listening.value) {
             logEvent('Timeout expired')
             const err = 'timeout: ' + msgStatus
-            listening.value = false
             throw err
           } else {
+            logEvent('Error in readFromPort: ' + error)
+            reader.releaseLock()
             throw Error('Error in readFromPortWithTimeout: ', {cause: error})
           }
         }
@@ -100,8 +125,7 @@ export const ComService = () => {
       clearTimeout(deadman.timer)
       listening.value = false
       reader.releaseLock();
-      logEvent('Valid message received: ' + res)
-      return res
+      return msgList
     }
   
     const exchangeMessages = async (sendMsg, timeout) => {
@@ -124,6 +148,7 @@ export const ComService = () => {
     return Object.freeze({
         writeToPort,
         exchangeMessages,
-        addReceivedMessage
+        addReceivedMessage,
+        pullMessagesFrom
     })
 }

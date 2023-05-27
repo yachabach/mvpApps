@@ -29,7 +29,6 @@ export const DeviceMessageService = () => {
     const checksumPassed = msg => {
         console.log('calculated cksum: ', checkSum(msg.slice(0, msg.length-1)))
         console.log('sent cksum: ', msg.slice(-1))
-        console.log('result: ', checkSum(msg.slice(0, msg.length-1)) == msg.slice(-1))
         return checkSum(msg.slice(0, msg.length-1)) == msg.slice(-1)
     }
 
@@ -66,12 +65,13 @@ export const DeviceMessageService = () => {
         return requestedCodes.reduce((msg, code) => msg.concat([commandMessageBuilder(commands.read, [code])]), [])
     }
 
-    console.log('Read response - frequency: ', commandMessageBuilder('0x02', ['0x47', '0x01', '0x1A']))
-    console.log('Read response - pulseWidth: ', commandMessageBuilder('0x02', ['0x48', '0x00', '0x04']))
+    // console.log('Read response - frequency: ', commandMessageBuilder('0x02', ['0x47', '0x01', '0x1A']))
+    // console.log('Read response - pulseWidth: ', commandMessageBuilder('0x02', ['0x48', '0x00', '0x04']))
     // console.log('Read response - waveform: ', commandMessageBuilder('0x02', ['0x49', '0x00', '0x01']))
 
     //parse the response from the device
     //0x37 len 0x02 code hi lo CS
+    //ACK: ['0x37', '0x02', '0xFF', '0x38'] : 0x37 0x02 0xFF 0x38
     //Request frequency: ['0x37', '0x03', '0x01', '0x47', '0x82']
     //Request pulseWIdth: ['0x37', '0x03', '0x01', '0x48', '0x83']
     //Request waveform: ['0x37', '0x03', '0x01', '0x49', '0x84']

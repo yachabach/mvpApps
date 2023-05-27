@@ -30,9 +30,9 @@ import { useProgramStore } from '@/common/programStore.js'
 import { usePortStore } from '@/common/portStore.js'
 import  { useLogStore } from '@/common/logStore.js'
 import { storeToRefs } from 'pinia'
-import { onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 
-const { initializePort } = usePortStore()
+const { initializePort, closeActivePort, forgetActivePort } = usePortStore()
 const { portAuthorized } = storeToRefs(usePortStore())
 const { logList } = storeToRefs(useLogStore())
 const { program } = storeToRefs(useProgramStore())
@@ -49,6 +49,11 @@ const handleOvalClick = async e => {
 }
 
 onMounted(async () => await initializePort()) 
+
+onBeforeUnmount(async () => {
+    await closeActivePort()
+    await forgetActivePort()
+})
 
 </script>
 

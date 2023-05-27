@@ -98,6 +98,10 @@ export const  usePortStore = defineStore('port', () => {
       await forgetPort(allPorts[i])
     }
   }
+
+  async function forgetActivePort() {
+    forgetPort(activePort.value)
+  }
   
   const openActivePort = async () => {
     if (!activePort.value.readable) {
@@ -150,6 +154,7 @@ export const  usePortStore = defineStore('port', () => {
   return { 
     activePort,
     closeActivePort,
+    forgetActivePort,
     changeActivePort, 
     initializePort, 
     activePortSignals,
