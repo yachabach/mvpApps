@@ -22,6 +22,8 @@ export const DeviceMessageService = () => {
         return newObj
     }, {})
 
+    const codeKeys = swapKeysToValues(parameterCodes)
+
     const msgSum = msg => msg.reduce((s, m) => s + parseInt(m),0)
 
     const checkSum = msg => msgSum(msg.slice(0, msg.length)) & parseInt('0xff')
@@ -104,6 +106,7 @@ export const DeviceMessageService = () => {
         checksumPassed,
         hiLoBytesToInt,
         parseResponse,
+        codeKeys,
         connectDevice,
         ACK, NACK,
         RESET, PHONE

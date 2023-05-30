@@ -68,7 +68,7 @@ export const  usePortStore = defineStore('port', () => {
       let timer = undefined
       const resetTimer = timeout => {
         console.log('resetting timer')
-          return setTimeout(()=> {
+        return setTimeout(()=> {
           console.log('firing timeout')
           listening.value = false
           reader.releaseLock()

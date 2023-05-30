@@ -32,7 +32,7 @@ import  { useLogStore } from '@/common/logStore.js'
 import { storeToRefs } from 'pinia'
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 
-const { initializePort, closeActivePort, forgetActivePort } = usePortStore()
+const { initializePort, closeActivePort } = usePortStore()
 const { portAuthorized } = storeToRefs(usePortStore())
 const { logList } = storeToRefs(useLogStore())
 const { program } = storeToRefs(useProgramStore())
@@ -50,10 +50,7 @@ const handleOvalClick = async e => {
 
 onMounted(async () => await initializePort()) 
 
-onBeforeUnmount(async () => {
-    await closeActivePort()
-    await forgetActivePort()
-})
+onBeforeUnmount(async () => await closeActivePort())
 
 </script>
 
