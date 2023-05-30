@@ -67,7 +67,6 @@ export const  usePortStore = defineStore('port', () => {
     const deadman = (() => {
       let timer = undefined
       const resetTimer = timeout => {
-        console.log('resetting timer')
         return setTimeout(()=> {
           console.log('firing timeout')
           listening.value = false

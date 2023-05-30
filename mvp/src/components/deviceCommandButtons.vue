@@ -41,9 +41,9 @@ const props = defineProps({
     portAuthorized: Boolean
 })
 
-const handleOvalClick = e => {
-    console.log('detected oval click in deviceCommandButtons.vue: ', e.target.id)
-}
+// const handleOvalClick = e => {
+//     console.log('detected oval click in deviceCommandButtons.vue: ', e.target.id)
+// }
 
 </script>
 

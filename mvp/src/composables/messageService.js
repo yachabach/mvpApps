@@ -1,7 +1,6 @@
 import { ComService } from "@/common/comService";
 import { DeviceMessageService } from "@/composables/deviceMessageService";
 import { useLogStore } from '@/common/logStore'
-import { mapWritableState } from "pinia";
 
 export const MessageService = () => {
 
@@ -12,23 +11,19 @@ export const MessageService = () => {
     let messageList = []
 
     const getMessage = async () => {
-        console.log('starting getMessage...')
         if (!messageList.length) messageList = messageList.concat(await readFromPortWithTimeout(5000))
-        console.log('MessageList from getMessage: ', messageList);
         const returnMsg = messageList.shift();
-        console.log('returnMsg: ', returnMsg)
         return (returnMsg && checksumPassed(returnMsg)) ? returnMsg : undefined
     }
 
     const receivedACK = async () => {
-        console.log('looking for ACK')
         const msg = await getMessage();
         const result = msg ? parseMessage(msg).payload.localeCompare('ACK') === 0 : false;
         logEvent(result ? 'ACK received' : 'ACK not received');
         return result;
     }
 
-    const sendProgramMessageList = async messageList => {
+    const sendWriteMessageList = async messageList => {
         return messageList.reduce(async (result, msg) => {
             if (await result) {
                 await writeToPort(msg)
@@ -67,7 +62,7 @@ export const MessageService = () => {
         getMessage,
         parseMessage,
         receivedACK,
-        sendProgramMessageList,
+        sendWriteMessageList,
         sendReadMessageList
     })
 }

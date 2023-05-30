@@ -35,15 +35,12 @@ export const ComService = () => {
       } finally {
         await writer.releaseLock()
       }
-      console.log('writer result: ', result)
       return result
     }
 
     const validateStream = stream => {
-      console.log('validating stream with stream[0]: ', stream[0])
       if (stream[0] != msgInit) {
         logEvent('Invalid start character - discarding data stream')
-        console.log('returning empty array')
         return []
       } else return stream
     }

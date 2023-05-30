@@ -28,11 +28,7 @@ export const DeviceMessageService = () => {
 
     const checkSum = msg => msgSum(msg.slice(0, msg.length)) & parseInt('0xff')
 
-    const checksumPassed = msg => {
-        console.log('calculated cksum: ', checkSum(msg.slice(0, msg.length-1)))
-        console.log('sent cksum: ', msg.slice(-1))
-        return checkSum(msg.slice(0, msg.length-1)) == msg.slice(-1)
-    }
+    const checksumPassed = msg => checkSum(msg.slice(0, msg.length-1)) == msg.slice(-1)
 
     //Turn payload data into array of hi byte and a lo byte
     const numToHiLoBytes = num => [
